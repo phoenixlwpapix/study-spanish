@@ -23,7 +23,7 @@ export const AccentKeyboard: React.FC<AccentKeyboardProps> = ({ onInsertChar, cl
             key={char}
             type="button"
             onClick={() => handleClick(char)}
-            className="w-8 h-8 flex items-center justify-center text-sm font-bold text-slate-700 bg-white hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300 border border-slate-200 rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer select-none"
+            className="w-8 h-8 flex items-center justify-center text-sm font-bold text-slate-700 bg-white hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300 border border-slate-200 rounded-lg shadow-xs active:scale-95 transition-[color,background-color,border-color,transform] cursor-pointer select-none"
             title={`Insert ${char}`}
           >
             {char}

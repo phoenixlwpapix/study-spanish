@@ -1,3 +1,5 @@
+export type MistakeReviewStatus = 'learning' | 'mastered';
+
 export interface MistakeItem {
   id: string;
   exerciseId: string;
@@ -9,6 +11,10 @@ export interface MistakeItem {
   explanation: string;
   timestamp: number;
   reviewedCount: number;
+  consecutiveCorrect: number;
+  reviewStatus: MistakeReviewStatus;
+  nextReviewAt: number | null;
+  lastReviewedAt: number | null;
 }
 
 export interface UserProgressState {

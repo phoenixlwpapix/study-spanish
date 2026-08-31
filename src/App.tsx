@@ -1,40 +1,141 @@
-import { useState } from 'react';
-import { ProgressProvider, useProgress } from './context/ProgressContext';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { ProgressProvider } from './context/ProgressContext';
+import { useProgress } from './context/useProgress';
 import { allUnits, getUnitById, getLessonById } from './data/curriculum';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { UnitProgressHero } from './components/dashboard/UnitProgressHero';
 import { LessonCard } from './components/dashboard/LessonCard';
 import { CourseRoadmap } from './components/dashboard/CourseRoadmap';
-import { LessonView } from './components/lesson/LessonView';
-import { GrammarCheatSheet } from './components/cheatsheet/GrammarCheatSheet';
-import { MistakesNotebook } from './components/mistakes/MistakesNotebook';
-import { UnitExamModal } from './components/exam/UnitExamModal';
 import { soundEffects } from './utils/soundEffects';
 
+const loadLessonView = () => import('./components/lesson/LessonView');
+const loadGrammarCheatSheet = () => import('./components/cheatsheet/GrammarCheatSheet');
+const loadMistakesNotebook = () => import('./components/mistakes/MistakesNotebook');
+const loadUnitExamModal = () => import('./components/exam/UnitExamModal');
+
+const LessonView = lazy(() => loadLessonView().then(module => ({ default: module.LessonView })));
+const GrammarCheatSheet = lazy(() => loadGrammarCheatSheet().then(module => ({ default: module.GrammarCheatSheet })));
+const MistakesNotebook = lazy(() => loadMistakesNotebook().then(module => ({ default: module.MistakesNotebook })));
+const UnitExamModal = lazy(() => loadUnitExamModal().then(module => ({ default: module.UnitExamModal })));
+
+function PageLoadingFallback() {
+  return (
+    <div role="status" className="min-h-72 rounded-3xl border border-slate-200 bg-white p-8 animate-pulse">
+      <span className="sr-only">Loading learning content…</span>
+      <div className="h-8 w-2/5 rounded-xl bg-slate-200" />
+      <div className="mt-5 h-4 w-4/5 rounded-lg bg-slate-100" />
+      <div className="mt-3 h-4 w-3/5 rounded-lg bg-slate-100" />
+    </div>
+  );
+}
+
+type AppTab = 'curriculum' | 'cheatsheet' | 'mistakes';
+
+interface AppNavigationState {
+  currentTab: AppTab;
+  selectedUnitId: number;
+  activeLessonId: string | null;
+  isExamModalOpen: boolean;
+}
+
+function readNavigationState(): AppNavigationState {
+  const params = new URLSearchParams(window.location.search);
+  const requestedUnitId = Number(params.get('unit'));
+  const selectedUnitId = getUnitById(requestedUnitId) ? requestedUnitId : 1;
+  const requestedLessonId = params.get('lesson');
+  const requestedLesson = requestedLessonId ? getLessonById(requestedLessonId) : undefined;
+  const requestedTab = params.get('tab');
+  const currentTab: AppTab = requestedLesson
+    ? 'curriculum'
+    : requestedTab === 'cheatsheet' || requestedTab === 'mistakes'
+      ? requestedTab
+      : 'curriculum';
+
+  return {
+    currentTab,
+    selectedUnitId: requestedLesson?.unitId ?? selectedUnitId,
+    activeLessonId: requestedLesson?.id ?? null,
+    isExamModalOpen: params.get('checkpoint') === '1',
+  };
+}
+
+function createNavigationUrl(state: AppNavigationState): string {
+  const params = new URLSearchParams();
+
+  if (state.selectedUnitId !== 1) {
+    params.set('unit', String(state.selectedUnitId));
+  }
+  if (state.currentTab !== 'curriculum') {
+    params.set('tab', state.currentTab);
+  }
+  if (state.activeLessonId) {
+    params.set('lesson', state.activeLessonId);
+  }
+  if (state.isExamModalOpen) {
+    params.set('checkpoint', '1');
+  }
+
+  const search = params.toString();
+  return `${window.location.pathname}${search ? `?${search}` : ''}`;
+}
+
+function scrollToTop(): void {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+}
+
 function AppContent() {
-  const [currentTab, setCurrentTab] = useState<'curriculum' | 'cheatsheet' | 'mistakes' | 'exam'>('curriculum');
-  const [selectedUnitId, setSelectedUnitId] = useState<number>(1);
-  const [activeLessonId, setActiveLessonId] = useState<string | null>(null);
-  const [isExamModalOpen, setIsExamModalOpen] = useState(false);
+  const [navigation, setNavigation] = useState<AppNavigationState>(readNavigationState);
   const { isLessonCompleted } = useProgress();
+  const { currentTab, selectedUnitId, activeLessonId, isExamModalOpen } = navigation;
+
+  const navigate = useCallback((nextState: AppNavigationState, replace = false) => {
+    setNavigation(nextState);
+    const nextUrl = createNavigationUrl(nextState);
+    if (replace) {
+      window.history.replaceState(null, '', nextUrl);
+    } else {
+      window.history.pushState(null, '', nextUrl);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setNavigation(readNavigationState());
+      scrollToTop();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const currentUnit = getUnitById(selectedUnitId) || allUnits[0];
 
   const handleSelectLesson = (lessonId: string) => {
     soundEffects.playClick();
     const lesson = getLessonById(lessonId);
-    if (lesson) {
-      setSelectedUnitId(lesson.unitId);
-    }
-    setActiveLessonId(lessonId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!lesson) return;
+
+    void loadLessonView();
+    navigate({
+      currentTab: 'curriculum',
+      selectedUnitId: lesson.unitId,
+      activeLessonId: lesson.id,
+      isExamModalOpen: false,
+    });
+    scrollToTop();
   };
 
   const handleBackToDashboard = () => {
     soundEffects.playClick();
-    setActiveLessonId(null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate({
+      ...navigation,
+      currentTab: 'curriculum',
+      activeLessonId: null,
+      isExamModalOpen: false,
+    });
+    scrollToTop();
   };
 
   const handleContinueLearning = () => {
@@ -44,38 +145,58 @@ function AppContent() {
     handleSelectLesson(targetId);
   };
 
-  const handleSelectTab = (tab: 'curriculum' | 'cheatsheet' | 'mistakes' | 'exam') => {
+  const handleOpenExam = () => {
+    void loadUnitExamModal();
+    navigate({ ...navigation, isExamModalOpen: true });
+  };
+
+  const handleSelectTab = (tab: AppTab | 'exam') => {
     soundEffects.playClick();
     if (tab === 'exam') {
-      setIsExamModalOpen(true);
+      handleOpenExam();
     } else {
-      setCurrentTab(tab);
-      setActiveLessonId(null);
+      if (tab === 'cheatsheet') void loadGrammarCheatSheet();
+      if (tab === 'mistakes') void loadMistakesNotebook();
+      navigate({
+        ...navigation,
+        currentTab: tab,
+        activeLessonId: null,
+        isExamModalOpen: false,
+      });
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTop();
   };
 
   const activeLesson = activeLessonId ? getLessonById(activeLessonId) : null;
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-indigo-500 selection:text-white">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-xl focus:bg-white focus:text-indigo-700 focus:font-bold focus:shadow-lg"
+      >
+        Skip to main content
+      </a>
       {/* Top Navigation */}
       <Navbar
         activeTab={currentTab}
+        selectedUnitId={selectedUnitId}
         onSelectTab={handleSelectTab}
-        onOpenExam={() => setIsExamModalOpen(true)}
+        onOpenExam={handleOpenExam}
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         
         {/* Active Lesson Screen */}
         {activeLesson ? (
-          <LessonView
-            lesson={activeLesson}
-            onBackToDashboard={handleBackToDashboard}
-            onSelectLesson={handleSelectLesson}
-          />
+          <Suspense fallback={<PageLoadingFallback />}>
+            <LessonView
+              lesson={activeLesson}
+              onBackToDashboard={handleBackToDashboard}
+              onSelectLesson={handleSelectLesson}
+            />
+          </Suspense>
         ) : (
           <>
             {/* Dashboard / Curriculum Tab */}
@@ -91,9 +212,14 @@ function AppContent() {
                         key={u.id}
                         onClick={() => {
                           soundEffects.playClick();
-                          setSelectedUnitId(u.id);
+                          navigate({
+                            currentTab: 'curriculum',
+                            selectedUnitId: u.id,
+                            activeLessonId: null,
+                            isExamModalOpen: false,
+                          });
                         }}
-                        className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold shrink-0 transition-all cursor-pointer ${
+                        className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold shrink-0 transition-colors cursor-pointer ${
                           isSelected
                             ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25 ring-2 ring-indigo-300'
                             : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:text-slate-900'
@@ -109,7 +235,7 @@ function AppContent() {
                 <UnitProgressHero
                   unit={currentUnit}
                   onContinueLearning={handleContinueLearning}
-                  onOpenExam={() => setIsExamModalOpen(true)}
+                  onOpenExam={handleOpenExam}
                 />
 
                 {/* Selected Unit Lessons Grid */}
@@ -152,27 +278,31 @@ function AppContent() {
 
             {/* Cheat Sheet Tab */}
             {currentTab === 'cheatsheet' && (
-              <GrammarCheatSheet />
+              <Suspense fallback={<PageLoadingFallback />}>
+                <GrammarCheatSheet />
+              </Suspense>
             )}
 
             {/* Mistakes Notebook Tab */}
             {currentTab === 'mistakes' && (
-              <MistakesNotebook
-                onGoToLesson={(lessonId) => {
-                  handleSelectLesson(lessonId);
-                }}
-              />
+              <Suspense fallback={<PageLoadingFallback />}>
+                <MistakesNotebook onGoToLesson={handleSelectLesson} />
+              </Suspense>
             )}
           </>
         )}
       </main>
 
       {/* Mastery Exam Modal */}
-      <UnitExamModal
-        isOpen={isExamModalOpen}
-        unitId={selectedUnitId}
-        onClose={() => setIsExamModalOpen(false)}
-      />
+      {isExamModalOpen && (
+        <Suspense fallback={null}>
+          <UnitExamModal
+            isOpen
+            unitId={selectedUnitId}
+            onClose={() => navigate({ ...navigation, isExamModalOpen: false }, true)}
+          />
+        </Suspense>
+      )}
 
       {/* Footer */}
       <Footer />

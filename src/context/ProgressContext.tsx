@@ -1,25 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import type { UserProgressState, MistakeItem } from '../types/progress';
 import { loadProgress, saveProgress, resetAllProgress } from '../utils/storage';
 import { soundEffects } from '../utils/soundEffects';
 import { triggerConfetti } from '../utils/confetti';
+import { ProgressContext } from './progress-context';
 
-interface ProgressContextType {
-  progress: UserProgressState;
-  isLessonCompleted: (lessonId: string) => boolean;
-  getLessonScore: (lessonId: string) => number | null;
-  completeLesson: (lessonId: string, score: number, maxScore: number) => void;
-  recordMistake: (mistake: Omit<MistakeItem, 'id' | 'timestamp' | 'reviewedCount'>) => void;
-  removeMistake: (mistakeId: string) => void;
-  clearAllMistakes: () => void;
-  recordUnitExam: (unitId: number, score: number, maxScore: number, passed: boolean) => void;
-  toggleVocabBookmark: (vocabId: string) => void;
-  isVocabBookmarked: (vocabId: string) => boolean;
-  updateSettings: (settings: Partial<UserProgressState['settings']>) => void;
-  resetProgressData: () => void;
-}
-
-const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
+const DAY_IN_MS = 24 * 60 * 60 * 1000;
+const REQUIRED_CORRECT_REVIEWS = 3;
+const REVIEW_INTERVALS_MS = [DAY_IN_MS, 3 * DAY_IN_MS] as const;
 
 export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [progress, setProgress] = useState<UserProgressState>(() => loadProgress());
@@ -80,8 +68,9 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, []);
 
-  const recordMistake = useCallback((mistake: Omit<MistakeItem, 'id' | 'timestamp' | 'reviewedCount'>) => {
+  const recordMistake = useCallback((mistake: Omit<MistakeItem, 'id' | 'timestamp' | 'reviewedCount' | 'consecutiveCorrect' | 'reviewStatus' | 'nextReviewAt' | 'lastReviewedAt'>) => {
     setProgress(prev => {
+      const now = Date.now();
       // Don't duplicate exact same exercise error if already logged
       const existingIdx = prev.mistakes.findIndex(m => m.exerciseId === mistake.exerciseId);
       if (existingIdx >= 0) {
@@ -89,7 +78,10 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         updated[existingIdx] = {
           ...updated[existingIdx],
           userAnswer: mistake.userAnswer,
-          timestamp: Date.now()
+          timestamp: now,
+          consecutiveCorrect: 0,
+          reviewStatus: 'learning',
+          nextReviewAt: now,
         };
         return { ...prev, mistakes: updated };
       }
@@ -97,8 +89,12 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const newMistake: MistakeItem = {
         ...mistake,
         id: `mistake-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-        timestamp: Date.now(),
-        reviewedCount: 0
+        timestamp: now,
+        reviewedCount: 0,
+        consecutiveCorrect: 0,
+        reviewStatus: 'learning',
+        nextReviewAt: now,
+        lastReviewedAt: null,
       };
 
       return {
@@ -108,13 +104,58 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     });
   }, []);
 
+  const reviewMistake = useCallback((mistakeId: string, isCorrect: boolean, userAnswer: string) => {
+    setProgress(prev => {
+      const now = Date.now();
+      let earnedMasteryXp = false;
+
+      const mistakes = prev.mistakes.map(item => {
+        if (item.id !== mistakeId || item.reviewStatus === 'mastered') return item;
+
+        if (!isCorrect) {
+          return {
+            ...item,
+            userAnswer,
+            reviewedCount: item.reviewedCount + 1,
+            consecutiveCorrect: 0,
+            nextReviewAt: now,
+            lastReviewedAt: now,
+          };
+        }
+
+        const consecutiveCorrect = Math.min(
+          REQUIRED_CORRECT_REVIEWS,
+          item.consecutiveCorrect + 1,
+        );
+        const isMastered = consecutiveCorrect >= REQUIRED_CORRECT_REVIEWS;
+        if (isMastered) earnedMasteryXp = true;
+
+        return {
+          ...item,
+          reviewedCount: item.reviewedCount + 1,
+          consecutiveCorrect,
+          reviewStatus: isMastered ? 'mastered' as const : 'learning' as const,
+          nextReviewAt: isMastered
+            ? null
+            : now + REVIEW_INTERVALS_MS[consecutiveCorrect - 1],
+          lastReviewedAt: now,
+        };
+      });
+
+      return {
+        ...prev,
+        mistakes,
+        xp: prev.xp + (earnedMasteryXp ? 15 : 0),
+      };
+    });
+  }, []);
+
   const removeMistake = useCallback((mistakeId: string) => {
     setProgress(prev => ({
       ...prev,
       mistakes: prev.mistakes.filter(m => m.id !== mistakeId),
-      xp: prev.xp + 15 // Bonus XP for clearing a mistake!
     }));
-    soundEffects.playSuccess();
+    soundEffects.playClick();
   }, []);
 
   const clearAllMistakes = useCallback(() => {
@@ -192,6 +233,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         getLessonScore,
         completeLesson,
         recordMistake,
+        reviewMistake,
         removeMistake,
         clearAllMistakes,
         recordUnitExam,
@@ -205,11 +247,3 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     </ProgressContext.Provider>
   );
 };
-
-export function useProgress() {
-  const context = useContext(ProgressContext);
-  if (!context) {
-    throw new Error('useProgress must be used within a ProgressProvider');
-  }
-  return context;
-}

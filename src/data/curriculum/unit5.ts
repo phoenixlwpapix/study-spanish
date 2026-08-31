@@ -630,8 +630,8 @@ export const unit5: Unit = {
 
   masteryExam: {
     id: 'u5-exam',
-    title: 'Unit 5 Comprehensive Mastery Exam',
-    description: '10 questions testing Saber/Conocer, Numbers 31–1000, Telling Time, Por/Para, Demonstratives, and Reflexive Verbs.',
+    title: 'Unit 5 Topic Checkpoint',
+    description: 'A short checkpoint covering representative saber/conocer, por/para, demonstrative, and reflexive-verb topics.',
     passingScore: 80,
     exercises: [
       {

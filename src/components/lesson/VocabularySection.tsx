@@ -3,7 +3,7 @@ import type { VocabularyItem } from '../../types/curriculum';
 import { AudioButton } from '../common/AudioButton';
 import { Badge } from '../common/Badge';
 import { Bookmark, BookmarkCheck } from 'lucide-react';
-import { useProgress } from '../../context/ProgressContext';
+import { useProgress } from '../../context/useProgress';
 
 interface VocabularySectionProps {
   vocabulary: VocabularyItem[];
@@ -38,7 +38,7 @@ export const VocabularySection: React.FC<VocabularySectionProps> = ({ vocabulary
           return (
             <div
               key={item.id}
-              className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between gap-4"
+              className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs hover:shadow-sm transition-shadow flex flex-col justify-between gap-4"
             >
               <div>
                 <div className="flex items-start justify-between gap-2">
@@ -67,11 +67,13 @@ export const VocabularySection: React.FC<VocabularySectionProps> = ({ vocabulary
                           : 'text-slate-300 hover:text-slate-500 hover:bg-slate-100'
                       }`}
                       title={bookmarked ? 'Remove bookmark' : 'Bookmark word'}
+                      aria-label={bookmarked ? `Remove bookmark for ${item.spanish}` : `Bookmark ${item.spanish}`}
+                      aria-pressed={bookmarked}
                     >
                       {bookmarked ? (
-                        <BookmarkCheck className="w-4 h-4" />
+                        <BookmarkCheck className="w-4 h-4" aria-hidden="true" />
                       ) : (
-                        <Bookmark className="w-4 h-4" />
+                        <Bookmark className="w-4 h-4" aria-hidden="true" />
                       )}
                     </button>
                   </div>

@@ -665,8 +665,8 @@ export const unit4: Unit = {
 
   masteryExam: {
     id: 'u4-exam',
-    title: 'Unit 4 Comprehensive Mastery Exam',
-    description: '10 questions testing Direct/Indirect Objects, Double Pronouns (se lo), Verbs like Gustar, Present Progressive, and "Yo-Go" verbs.',
+    title: 'Unit 4 Topic Checkpoint',
+    description: 'A short checkpoint covering representative object-pronoun, gustar, and present-progressive topics.',
     passingScore: 80,
     exercises: [
       {

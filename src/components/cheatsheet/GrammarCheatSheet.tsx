@@ -530,13 +530,13 @@ export const GrammarCheatSheet: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-wider mb-1">
               <FileText className="w-4 h-4" />
-              <span>Comprehensive 9-Unit Reference Guide</span>
+              <span>9-Unit App Reference Guide</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 m-0 text-left">
-              Complete Spanish Grammar Cheat Sheet
-            </h2>
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 m-0 text-left">
+              Spanish Grammar Cheat Sheet
+            </h1>
             <p className="text-sm text-slate-600 font-medium mt-1">
-              Quick formulas, charts, and golden rules covering all 9 Units (A1 to B2).
+              Quick formulas, charts, and rules for the topics currently taught across all 9 units.
             </p>
           </div>
 
@@ -545,9 +545,12 @@ export const GrammarCheatSheet: React.FC = () => {
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
+              name="grammar-search"
+              aria-label="Search grammar topics"
+              autoComplete="off"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search grammar topics..."
+              placeholder="Search grammar topics…"
               className="w-full pl-10 pr-4 py-2.5 text-xs font-semibold rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-slate-50"
             />
           </div>
@@ -561,7 +564,7 @@ export const GrammarCheatSheet: React.FC = () => {
           </span>
           <button
             onClick={() => setSelectedUnitFilter('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-colors cursor-pointer ${
               selectedUnitFilter === 'all'
                 ? 'bg-indigo-600 text-white shadow-xs'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -573,7 +576,7 @@ export const GrammarCheatSheet: React.FC = () => {
             <button
               key={uNum}
               onClick={() => setSelectedUnitFilter(uNum)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-colors cursor-pointer ${
                 selectedUnitFilter === uNum
                   ? 'bg-indigo-600 text-white shadow-xs'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'

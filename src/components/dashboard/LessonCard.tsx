@@ -1,6 +1,7 @@
 import React from 'react';
+import type { LucideIcon } from 'lucide-react';
 import type { Lesson } from '../../types/curriculum';
-import { useProgress } from '../../context/ProgressContext';
+import { useProgress } from '../../context/useProgress';
 import { 
   CheckCircle2, 
   Circle, 
@@ -22,33 +23,30 @@ interface LessonCardProps {
   onSelect: (lessonId: string) => void;
 }
 
+const LESSON_ICONS: Record<string, LucideIcon> = {
+  Sparkles,
+  Layers,
+  Copy,
+  Grid,
+  Users,
+  Zap,
+  Compass,
+  HelpCircle,
+};
+
 export const LessonCard: React.FC<LessonCardProps> = ({ lesson, onSelect }) => {
   const { isLessonCompleted, getLessonScore } = useProgress();
 
   const isCompleted = isLessonCompleted(lesson.id);
   const scorePercentage = getLessonScore(lesson.id);
 
-  // Icon mapping
-  const getIcon = () => {
-    switch (lesson.iconName) {
-      case 'Sparkles': return Sparkles;
-      case 'Layers': return Layers;
-      case 'Copy': return Copy;
-      case 'Grid': return Grid;
-      case 'Users': return Users;
-      case 'Zap': return Zap;
-      case 'Compass': return Compass;
-      case 'HelpCircle': return HelpCircle;
-      default: return BookOpen;
-    }
-  };
-
-  const IconComponent = getIcon();
+  const IconComponent = LESSON_ICONS[lesson.iconName ?? ''] ?? BookOpen;
 
   return (
-    <div
+    <button
+      type="button"
       onClick={() => onSelect(lesson.id)}
-      className={`group relative bg-white rounded-3xl p-6 border-2 transition-all duration-200 cursor-pointer flex flex-col justify-between gap-5 ${
+      className={`group relative w-full text-left bg-white rounded-3xl p-6 border-2 transition-[color,background-color,border-color,box-shadow,transform] duration-200 cursor-pointer flex flex-col justify-between gap-5 ${
         isCompleted
           ? 'border-emerald-200 hover:border-emerald-400 hover:shadow-md'
           : 'border-slate-200 hover:border-indigo-400 hover:shadow-lg'
@@ -119,6 +117,6 @@ export const LessonCard: React.FC<LessonCardProps> = ({ lesson, onSelect }) => {
           <ArrowRight className="w-4 h-4" />
         </span>
       </div>
-    </div>
+    </button>
   );
 };

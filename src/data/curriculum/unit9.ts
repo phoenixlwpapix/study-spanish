@@ -3,12 +3,12 @@ import type { Unit } from './types';
 export const unit9: Unit = {
   id: 9,
   title: 'Unit 9: Future, Conditional & Perfect Tenses',
-  subtitle: 'Lessons 96–100: Synthetic Future (-é), Conditional (-ía), Perfect Tenses (he hablado) & Past Subjunctive',
-  description: 'Reach advanced Spanish mastery: synthetic Future Tense (-é, -ás, -á), Conditional Tense ("would do" -ía), Present & Past Perfect (he comido, había comido), and the Imperfect Subjunctive (-ra/-se for hypothetical "Si" clauses).',
+  subtitle: '4 selected lessons from topics 99, 101, and 104–107: Advanced tense foundations',
+  description: 'A condensed introduction to the future, conditional, present perfect, and imperfect subjunctive. Past and future perfect, accentuation, and the full imperfect-subjunctive sequence remain planned.',
   iconName: 'Zap',
   colorTheme: 'rose',
   isAvailable: true,
-  lessons: [
+  lessons: ([
     // -------------------------------------------------------------
     // LESSON 96: Future Tense
     // -------------------------------------------------------------
@@ -16,8 +16,8 @@ export const unit9: Unit = {
       id: 'u9-l96',
       slug: 'future-tense',
       unitId: 9,
-      order: 96,
-      title: '96. Future Tense',
+      order: 99,
+      title: '99. Future Tense',
       subtitle: 'The Simple Future Tense: -é, -ás, -á, -emos, -éis, -án',
       estimatedMinutes: 11,
       iconName: 'FastForward',
@@ -81,8 +81,8 @@ export const unit9: Unit = {
       id: 'u9-l97',
       slug: 'conditional-tense',
       unitId: 9,
-      order: 97,
-      title: '97. Conditional Tense',
+      order: 104,
+      title: '104. Conditional Tense',
       subtitle: 'Expressing "Would do": -ía, -ías, -ía, -íamos, -íais, -ían',
       estimatedMinutes: 11,
       iconName: 'GitBranch',
@@ -138,8 +138,8 @@ export const unit9: Unit = {
       id: 'u9-l98',
       slug: 'present-perfect',
       unitId: 9,
-      order: 98,
-      title: '98. Present Perfect',
+      order: 101,
+      title: '101. Present Perfect',
       subtitle: 'Expressing "Have done": haber (he, has, ha, hemos, han) + Participio',
       estimatedMinutes: 11,
       iconName: 'CheckCircle2',
@@ -202,8 +202,8 @@ export const unit9: Unit = {
       id: 'u9-l100',
       slug: 'imperfect-subjunctive',
       unitId: 9,
-      order: 100,
-      title: '100. Imperfect Subjunctive',
+      order: 105,
+      title: '105–107. Imperfect Subjunctive',
       subtitle: 'Past Subjunctive (-ra) & Hypothetical "Si" Clauses',
       estimatedMinutes: 14,
       iconName: 'CloudRain',
@@ -255,12 +255,12 @@ export const unit9: Unit = {
         }
       ]
     }
-  ],
+  ] satisfies Unit['lessons']).sort((first, second) => first.order - second.order),
 
   masteryExam: {
     id: 'u9-exam',
-    title: 'Unit 9 Comprehensive Mastery Exam',
-    description: '10 questions testing Future Tense, Conditional Tense, Present Perfect, and Imperfect Subjunctive "Si" clauses.',
+    title: 'Unit 9 Selected Topics Checkpoint',
+    description: 'A short checkpoint covering representative future, conditional, perfect, and hypothetical forms.',
     passingScore: 80,
     exercises: [
       {

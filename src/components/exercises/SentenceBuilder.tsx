@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { SentenceBuilderExercise } from '../../types/curriculum';
 import { AudioButton } from '../common/AudioButton';
 import { RotateCcw } from 'lucide-react';
@@ -21,13 +21,9 @@ export const SentenceBuilder: React.FC<SentenceBuilderProps> = ({
   disabled = false,
 }) => {
   // Randomize available word chips order
-  const [shuffledTokens, setShuffledTokens] = useState(() => 
+  const [shuffledTokens] = useState(() =>
     shuffleArray(exercise.availableTokens)
   );
-
-  useEffect(() => {
-    setShuffledTokens(shuffleArray(exercise.availableTokens));
-  }, [exercise.id]);
 
   // Count how many times each token is selected to support duplicate tokens
   const tokenCounts = selectedTokens.reduce<Record<string, number>>((acc, token) => {
@@ -77,7 +73,7 @@ export const SentenceBuilder: React.FC<SentenceBuilderProps> = ({
       </div>
 
       {/* Assembly Construction Area */}
-      <div className={`min-h-[110px] p-5 rounded-2xl border-2 transition-all flex flex-wrap items-center gap-2 relative ${
+      <div className={`min-h-[110px] p-5 rounded-2xl border-2 transition-colors flex flex-wrap items-center gap-2 relative ${
         isSubmitted
           ? isCorrect
             ? 'bg-emerald-50/70 border-emerald-400'
@@ -95,7 +91,7 @@ export const SentenceBuilder: React.FC<SentenceBuilderProps> = ({
               type="button"
               onClick={() => handleRemoveToken(idx)}
               disabled={disabled || isSubmitted}
-              className={`px-4 py-2 rounded-xl text-base font-bold shadow-xs active:scale-95 transition-all cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-base font-bold shadow-xs active:scale-95 transition-[color,background-color,transform] cursor-pointer ${
                 isSubmitted
                   ? isCorrect
                     ? 'bg-emerald-600 text-white'
@@ -115,8 +111,9 @@ export const SentenceBuilder: React.FC<SentenceBuilderProps> = ({
             onClick={handleReset}
             className="absolute top-3 right-3 text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
             title="Clear all tokens"
+            aria-label="Clear all selected words"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-4 h-4" aria-hidden="true" />
           </button>
         )}
       </div>
@@ -136,7 +133,7 @@ export const SentenceBuilder: React.FC<SentenceBuilderProps> = ({
                   type="button"
                   onClick={() => handleAddToken(token)}
                   disabled={!available || disabled}
-                  className={`px-4 py-2 text-base font-bold rounded-xl border transition-all ${
+                  className={`px-4 py-2 text-base font-bold rounded-xl border transition-[color,background-color,border-color,transform] ${
                     available
                       ? 'bg-white hover:bg-indigo-50 hover:border-indigo-400 text-slate-800 border-slate-200 shadow-xs active:scale-95 cursor-pointer'
                       : 'bg-slate-200/50 text-slate-300 border-transparent cursor-not-allowed opacity-40'

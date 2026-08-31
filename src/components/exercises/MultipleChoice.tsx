@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { MultipleChoiceExercise } from '../../types/curriculum';
 import { AudioButton } from '../common/AudioButton';
 import { CheckCircle2, XCircle } from 'lucide-react';
@@ -21,11 +21,7 @@ export const MultipleChoice: React.FC<MultipleChoiceProps> = ({
   disabled = false,
 }) => {
   // Randomize option positions on load and per-exercise change
-  const [shuffledOptions, setShuffledOptions] = useState(() => shuffleArray(exercise.options));
-
-  useEffect(() => {
-    setShuffledOptions(shuffleArray(exercise.options));
-  }, [exercise.id]);
+  const [shuffledOptions] = useState(() => shuffleArray(exercise.options));
 
   const handleSelect = (optionId: string) => {
     if (disabled || isSubmitted) return;
@@ -77,7 +73,7 @@ export const MultipleChoice: React.FC<MultipleChoiceProps> = ({
               type="button"
               onClick={() => handleSelect(option.id)}
               disabled={disabled || isSubmitted}
-              className={`w-full text-left p-4 rounded-2xl border-2 transition-all flex items-center justify-between gap-3 active:scale-[0.99] cursor-pointer disabled:cursor-default ${cardStyle}`}
+              className={`w-full text-left p-4 rounded-2xl border-2 transition-[color,background-color,border-color,transform] flex items-center justify-between gap-3 active:scale-[0.99] cursor-pointer disabled:cursor-default ${cardStyle}`}
             >
               <div className="flex items-center gap-3.5">
                 <span className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black border shrink-0 transition-colors ${badgeStyle}`}>

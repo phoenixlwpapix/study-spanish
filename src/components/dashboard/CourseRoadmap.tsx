@@ -7,7 +7,7 @@ import {
   GraduationCap,
   ChevronsUpDown
 } from 'lucide-react';
-import { useProgress } from '../../context/ProgressContext';
+import { useProgress } from '../../context/useProgress';
 
 interface CourseRoadmapProps {
   onSelectLesson: (lessonId: string) => void;
@@ -40,19 +40,19 @@ export const CourseRoadmap: React.FC<CourseRoadmapProps> = ({ onSelectLesson, cu
           <div>
             <div className="flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-wider mb-1">
               <GraduationCap className="w-4 h-4" />
-              <span>Full 9-Unit Course Curriculum</span>
+              <span>9-Unit Interactive Curriculum</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 m-0 text-left">
-              Spanish Grammar Progression (A1 → B2)
+              9-Unit Spanish Grammar Roadmap
             </h2>
             <p className="text-sm text-slate-600 font-medium mt-1">
-              Structured following the proven StudySpanish curriculum hierarchy. Click any unit to expand its lessons.
+              Units 1–5 closely follow the StudySpanish topic sequence; Units 6–9 are condensed selections. Click a unit to explore its lessons.
             </p>
           </div>
 
           <button
             onClick={handleToggleAll}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all cursor-pointer self-start sm:self-auto shrink-0"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer self-start sm:self-auto shrink-0"
           >
             <ChevronsUpDown className="w-3.5 h-3.5" />
             <span>{expandedUnitIds.length === allUnits.length ? 'Collapse All' : 'Expand All'}</span>
@@ -71,7 +71,7 @@ export const CourseRoadmap: React.FC<CourseRoadmapProps> = ({ onSelectLesson, cu
           return (
             <div
               key={unit.id}
-              className={`bg-white rounded-3xl border-2 transition-all duration-200 overflow-hidden ${
+              className={`bg-white rounded-3xl border-2 transition-[background-color,border-color,box-shadow] duration-200 overflow-hidden ${
                 isExpanded 
                   ? 'border-indigo-300 shadow-md ring-2 ring-indigo-100' 
                   : isCurrentUnit
@@ -80,9 +80,11 @@ export const CourseRoadmap: React.FC<CourseRoadmapProps> = ({ onSelectLesson, cu
               }`}
             >
               {/* Unit Header */}
-              <div
+              <button
+                type="button"
                 onClick={() => toggleUnit(unit.id)}
-                className="p-6 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-50/80 transition-colors"
+                className="w-full p-6 flex items-center justify-between gap-4 text-left cursor-pointer hover:bg-slate-50/80 transition-colors"
+                aria-expanded={isExpanded}
               >
                 <div className="flex items-start gap-4">
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-lg shrink-0 ${
@@ -103,6 +105,11 @@ export const CourseRoadmap: React.FC<CourseRoadmapProps> = ({ onSelectLesson, cu
                       <span className="px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[11px] font-extrabold uppercase tracking-wider">
                         {unit.lessons.length} Lessons
                       </span>
+                      {unit.id >= 6 && (
+                        <span className="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[11px] font-extrabold uppercase tracking-wider">
+                          Condensed
+                        </span>
+                      )}
                       {completedCount > 0 && (
                         <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold">
                           {completedCount}/{unit.lessons.length} Completed
@@ -118,7 +125,7 @@ export const CourseRoadmap: React.FC<CourseRoadmapProps> = ({ onSelectLesson, cu
                 <div className="text-slate-400 p-1 rounded-xl hover:bg-slate-100">
                   {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                 </div>
-              </div>
+              </button>
 
               {/* Collapsible Lessons Outline */}
               {isExpanded && (
@@ -132,10 +139,11 @@ export const CourseRoadmap: React.FC<CourseRoadmapProps> = ({ onSelectLesson, cu
                       const completed = isLessonCompleted(lesson.id);
 
                       return (
-                        <div
+                        <button
+                          type="button"
                           key={lesson.id}
                           onClick={() => onSelectLesson(lesson.id)}
-                          className={`p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 cursor-pointer shadow-2xs ${
+                          className={`w-full p-3.5 rounded-2xl border text-left transition-[color,background-color,border-color,box-shadow] flex items-center justify-between gap-3 cursor-pointer shadow-2xs ${
                             completed
                               ? 'bg-emerald-50/80 border-emerald-200 hover:border-emerald-300'
                               : 'bg-white border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/30'
@@ -166,7 +174,7 @@ export const CourseRoadmap: React.FC<CourseRoadmapProps> = ({ onSelectLesson, cu
                               Start →
                             </span>
                           )}
-                        </div>
+                        </button>
                       );
                     })}
                   </div>

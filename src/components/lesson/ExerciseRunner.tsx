@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import type { Exercise } from '../../types/curriculum';
 import { ProgressBar } from '../common/ProgressBar';
 import { MultipleChoice } from '../exercises/MultipleChoice';
@@ -7,10 +7,11 @@ import { SentenceBuilder } from '../exercises/SentenceBuilder';
 import { MatchingPairs } from '../exercises/MatchingPairs';
 import { ErrorCorrection } from '../exercises/ErrorCorrection';
 import { CheckCircle2, XCircle, ArrowRight, RotateCcw, Award, Zap } from 'lucide-react';
-import { useProgress } from '../../context/ProgressContext';
+import { useProgress } from '../../context/useProgress';
 import { FormattedText } from '../common/FormattedText';
 import { soundEffects } from '../../utils/soundEffects';
-import { triggerConfetti } from '../../utils/confetti';
+
+type ExerciseMode = 'lesson' | 'exam';
 
 interface ExerciseRunnerProps {
   exercises: Exercise[];
@@ -19,6 +20,8 @@ interface ExerciseRunnerProps {
   onFinishLesson: (score: number, maxScore: number) => void;
   onGoToNextLesson?: () => void;
   hasNextLesson?: boolean;
+  mode?: ExerciseMode;
+  passingScore?: number;
 }
 
 export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
@@ -28,6 +31,8 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
   onFinishLesson,
   onGoToNextLesson,
   hasNextLesson = false,
+  mode = 'lesson',
+  passingScore = 70,
 }) => {
   const { recordMistake, completeLesson } = useProgress();
 
@@ -49,7 +54,7 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
   const isLastQuestion = currentIndex === exercises.length - 1;
 
   // Reset exercise state when moving to next question
-  const resetQuestionState = () => {
+  const resetQuestionState = useCallback(() => {
     setIsSubmitted(false);
     setIsCurrentCorrect(false);
     setMcSelectedId(null);
@@ -58,9 +63,9 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
     setMpMatchedIds([]);
     setMpCompleted(false);
     setEcSelectedOpt(null);
-  };
+  }, []);
 
-  const isReadyToSubmit = () => {
+  const isReadyToSubmit = useCallback(() => {
     if (!currentExercise) return false;
     switch (currentExercise.type) {
       case 'multiple-choice':
@@ -76,9 +81,9 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
       default:
         return false;
     }
-  };
+  }, [currentExercise, ecSelectedOpt, fibText, mcSelectedId, mpCompleted, mpMatchedIds.length, sbTokens.length]);
 
-  const handleSubmitAnswer = () => {
+  const handleSubmitAnswer = useCallback(() => {
     if (isSubmitted || !isReadyToSubmit()) return;
 
     let correct = false;
@@ -141,21 +146,22 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
         explanation: currentExercise.explanation
       });
     }
-  };
+  }, [currentExercise, ecSelectedOpt, fibText, isReadyToSubmit, isSubmitted, lessonId, mcSelectedId, recordMistake, sbTokens, unitId]);
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = useCallback(() => {
     if (isLastQuestion) {
       // Final score is already accumulated accurately in `score`
       const finalScore = Math.min(exercises.length, Math.max(0, score));
-      completeLesson(lessonId, finalScore, exercises.length);
+      if (mode === 'lesson') {
+        completeLesson(lessonId, finalScore, exercises.length);
+      }
       onFinishLesson(finalScore, exercises.length);
       setIsFinished(true);
-      triggerConfetti();
     } else {
       setCurrentIndex(prev => prev + 1);
       resetQuestionState();
     }
-  };
+  }, [completeLesson, exercises.length, isLastQuestion, lessonId, mode, onFinishLesson, resetQuestionState, score]);
 
   const handleRestart = () => {
     setCurrentIndex(0);
@@ -177,13 +183,15 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isSubmitted, mcSelectedId, fibText, sbTokens, mpCompleted, ecSelectedOpt]);
+  }, [handleNextQuestion, handleSubmitAnswer, isReadyToSubmit, isSubmitted]);
 
   if (isFinished) {
     const safeScore = Math.min(exercises.length, Math.max(0, score));
     const percentage = exercises.length > 0 ? Math.min(100, Math.max(0, Math.round((safeScore / exercises.length) * 100))) : 100;
-    const isPassed = percentage >= 70;
-    const earnedXp = percentage >= 70 ? 100 : 40;
+    const isPassed = percentage >= passingScore;
+    const earnedXp = mode === 'exam'
+      ? (isPassed ? 150 : 50)
+      : Math.max(20, Math.round((percentage / 100) * 80) + 20);
 
     return (
       <div className="max-w-lg mx-auto bg-white rounded-3xl p-8 shadow-xl border border-slate-100 text-center space-y-6 animate-in zoom-in-95 duration-300">
@@ -229,7 +237,7 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
           {hasNextLesson && onGoToNextLesson && (
             <button
               onClick={onGoToNextLesson}
-              className="w-full py-3.5 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-base shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition-all cursor-pointer"
+              className="w-full py-3.5 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-base shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition-colors cursor-pointer"
             >
               <span>Next Lesson</span>
               <ArrowRight className="w-5 h-5" />
@@ -238,7 +246,7 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
 
           <button
             onClick={handleRestart}
-            className="w-full py-3 px-6 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="w-full py-3 px-6 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
             <span>Practice Again</span>
@@ -322,13 +330,17 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
       </div>
 
       {/* Bottom Feedback Banner & Action Bar */}
-      <div className={`p-5 rounded-2xl border-2 transition-all duration-300 ${
-        isSubmitted
-          ? isCurrentCorrect
-            ? 'bg-emerald-50 border-emerald-300'
-            : 'bg-rose-50 border-rose-300'
-          : 'bg-white border-slate-200'
-      }`}>
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        className={`p-5 rounded-2xl border-2 transition-colors duration-300 ${
+          isSubmitted
+            ? isCurrentCorrect
+              ? 'bg-emerald-50 border-emerald-300'
+              : 'bg-rose-50 border-rose-300'
+            : 'bg-white border-slate-200'
+        }`}
+      >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           {/* Feedback message and explanation */}
           <div className="flex-1">
@@ -369,7 +381,7 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
                 type="button"
                 onClick={handleSubmitAnswer}
                 disabled={!isReadyToSubmit()}
-                className="w-full sm:w-auto px-8 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-600/20 disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none transition-all cursor-pointer disabled:cursor-not-allowed"
+                className="w-full sm:w-auto px-8 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-600/20 disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none transition-colors cursor-pointer disabled:cursor-not-allowed"
               >
                 Check Answer
               </button>
@@ -377,7 +389,7 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
               <button
                 type="button"
                 onClick={handleNextQuestion}
-                className={`w-full sm:w-auto px-8 py-3 rounded-xl text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                className={`w-full sm:w-auto px-8 py-3 rounded-xl text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-colors cursor-pointer ${
                   isCurrentCorrect
                     ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
                     : 'bg-rose-600 hover:bg-rose-700 shadow-rose-600/20'

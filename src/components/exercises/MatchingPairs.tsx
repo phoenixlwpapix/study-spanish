@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { MatchingPairsExercise } from '../../types/curriculum';
 import { CheckCircle2, Sparkles } from 'lucide-react';
 import { soundEffects } from '../../utils/soundEffects';
@@ -26,17 +26,9 @@ export const MatchingPairs: React.FC<MatchingPairsProps> = ({
   const [mismatchedPair, setMismatchedPair] = useState<[string, string] | null>(null);
 
   // Keep a stable shuffled order of the right column for this exercise
-  const [shuffledRights, setShuffledRights] = useState(() => {
+  const [shuffledRights] = useState(() => {
     return [...exercise.pairs].sort(() => Math.random() - 0.5);
   });
-
-  // Re-shuffle if exercise changes
-  useEffect(() => {
-    setShuffledRights([...exercise.pairs].sort(() => Math.random() - 0.5));
-    setSelectedLeft(null);
-    setSelectedRight(null);
-    setMismatchedPair(null);
-  }, [exercise.id]);
 
   const handleLeftClick = (pairId: string, spanishText: string) => {
     if (disabled || isSubmitted || matchedPairIds.includes(pairId)) return;
@@ -149,7 +141,7 @@ export const MatchingPairs: React.FC<MatchingPairsProps> = ({
                 type="button"
                 onClick={() => handleLeftClick(pair.id, pair.left)}
                 disabled={isMatched || disabled || isSubmitted}
-                className={`w-full p-4 rounded-2xl border-2 text-left font-bold text-base transition-all flex items-center justify-between cursor-pointer disabled:cursor-default ${cardStyle}`}
+                className={`w-full p-4 rounded-2xl border-2 text-left font-bold text-base transition-colors flex items-center justify-between cursor-pointer disabled:cursor-default ${cardStyle}`}
               >
                 <span>{pair.left}</span>
                 {isMatched && <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />}
@@ -183,7 +175,7 @@ export const MatchingPairs: React.FC<MatchingPairsProps> = ({
                 type="button"
                 onClick={() => handleRightClick(pair.id)}
                 disabled={isMatched || disabled || isSubmitted}
-                className={`w-full p-4 rounded-2xl border-2 text-left font-bold text-base transition-all flex items-center justify-between cursor-pointer disabled:cursor-default ${cardStyle}`}
+                className={`w-full p-4 rounded-2xl border-2 text-left font-bold text-base transition-colors flex items-center justify-between cursor-pointer disabled:cursor-default ${cardStyle}`}
               >
                 <span>{pair.right}</span>
                 {isMatched && <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />}

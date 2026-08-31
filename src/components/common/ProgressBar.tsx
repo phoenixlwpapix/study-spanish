@@ -40,9 +40,16 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           <span>{current} / {total} ({percentage}%)</span>
         </div>
       )}
-      <div className={`w-full bg-slate-200/80 rounded-full overflow-hidden ${heightClasses[size]}`}>
+      <div
+        className={`w-full bg-slate-200/80 rounded-full overflow-hidden ${heightClasses[size]}`}
+        role="progressbar"
+        aria-label="Progress"
+        aria-valuemin={0}
+        aria-valuemax={total}
+        aria-valuenow={Math.min(total, Math.max(0, current))}
+      >
         <div
-          className={`${heightClasses[size]} ${colorClasses[color]} rounded-full transition-all duration-300 ease-out`}
+          className={`${heightClasses[size]} ${colorClasses[color]} rounded-full transition-[width] duration-300 ease-out`}
           style={{ width: `${percentage}%` }}
         />
       </div>

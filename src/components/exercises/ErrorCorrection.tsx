@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { ErrorIdentificationExercise } from '../../types/curriculum';
 import { CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
 import { soundEffects } from '../../utils/soundEffects';
@@ -20,13 +20,9 @@ export const ErrorCorrection: React.FC<ErrorCorrectionProps> = ({
   disabled = false,
 }) => {
   // Randomize option order
-  const [shuffledOptions, setShuffledOptions] = useState(() => 
+  const [shuffledOptions] = useState(() =>
     shuffleArray(exercise.options)
   );
-
-  useEffect(() => {
-    setShuffledOptions(shuffleArray(exercise.options));
-  }, [exercise.id]);
 
   const handleSelect = (opt: string) => {
     if (disabled || isSubmitted) return;
@@ -90,7 +86,7 @@ export const ErrorCorrection: React.FC<ErrorCorrectionProps> = ({
                 type="button"
                 onClick={() => handleSelect(opt)}
                 disabled={disabled || isSubmitted}
-                className={`p-4 rounded-xl border-2 text-left font-bold text-base transition-all flex items-center justify-between cursor-pointer disabled:cursor-default ${cardStyle}`}
+                className={`p-4 rounded-xl border-2 text-left font-bold text-base transition-colors flex items-center justify-between cursor-pointer disabled:cursor-default ${cardStyle}`}
               >
                 <span>{opt}</span>
                 {isSubmitted && isCorrect && (

@@ -701,8 +701,8 @@ export const unit3: Unit = {
 
   masteryExam: {
     id: 'u3-exam',
-    title: 'Unit 3 Comprehensive Mastery Exam',
-    description: '10 questions testing Stem-Changers, Estar/Ir/Dar, Periphrasis (Ir a, Acabar de, Volver a), Ordinals, and Comparatives/Superlatives.',
+    title: 'Unit 3 Topic Checkpoint',
+    description: 'A short checkpoint covering representative stem-changing verbs, periphrastic expressions, and comparisons.',
     passingScore: 80,
     exercises: [
       {

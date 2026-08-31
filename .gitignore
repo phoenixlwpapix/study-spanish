@@ -26,3 +26,5 @@ dist-ssr
 # Vercel & Agent
 .vercel
 .agent
+
+.vercel

@@ -8,11 +8,11 @@ export const Footer: React.FC = () => {
         <div className="flex flex-wrap items-center justify-center gap-6 text-sm font-medium text-slate-600">
           <span className="flex items-center gap-1.5">
             <GraduationCap className="w-4 h-4 text-amber-500" />
-            Curriculum aligned with standard CEFR A1 / StudySpanish structure
+            Topic progression inspired by StudySpanish Grammar
           </span>
           <span className="flex items-center gap-1.5">
             <Sparkles className="w-4 h-4 text-indigo-500" />
-            Unit 1 Fully Interactive • Units 2–9 Ready
+            78 interactive lessons • Units 6–9 currently condensed
           </span>
         </div>
         <p className="text-slate-400">

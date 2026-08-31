@@ -3,8 +3,8 @@ import type { Unit } from './types';
 export const unit7: Unit = {
   id: 7,
   title: 'Unit 7: Subjunctive Mood (Present Subjunctive)',
-  subtitle: 'Lessons 75–84: The Subjunctive Mood, Opposite Vowels & W.E.I.R.D.O.S. Triggers',
-  description: 'Enter the world of the subjunctive mood: understanding reality vs. subjective desires, forming opposite vowel endings (-ar → -e, -er/-ir → -a), irregular D.I.S.H.E.S. verbs, and triggering clauses (Wishes, Emotions, Impersonal, Requests, Doubt, and Adverbial Time Clauses).',
+  subtitle: '3 selected lessons from topics 77–84: Present subjunctive foundations',
+  description: 'A condensed introduction to the present subjunctive: indicative versus subjunctive, opposite-vowel endings, and essential irregular forms. Additional trigger categories remain planned.',
   iconName: 'Award',
   colorTheme: 'violet',
   isAvailable: true,
@@ -78,7 +78,7 @@ export const unit7: Unit = {
       slug: 'subjunctive-2-conjugation',
       unitId: 7,
       order: 78,
-      title: '78. Subjunctive II: Conjugation',
+      title: '78. Subjunctive II: Regular & Stem-Changing Verbs',
       subtitle: 'The "Opposite Vowel" Rule: -AR → -e, -ER/-IR → -a',
       estimatedMinutes: 12,
       iconName: 'Edit3',
@@ -197,8 +197,8 @@ export const unit7: Unit = {
 
   masteryExam: {
     id: 'u7-exam',
-    title: 'Unit 7 Comprehensive Mastery Exam',
-    description: '10 questions testing Subjunctive vs Indicative, opposite vowel rules, and D.I.S.H.E.S. irregulars.',
+    title: 'Unit 7 Selected Topics Checkpoint',
+    description: 'A short checkpoint covering subjunctive versus indicative, opposite-vowel endings, and irregular forms.',
     passingScore: 80,
     exercises: [
       {

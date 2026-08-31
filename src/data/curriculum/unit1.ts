@@ -3,7 +3,7 @@ import type { Unit } from './types';
 export const unit1: Unit = {
   id: 1,
   title: 'Unit 1: Spanish Grammar Fundamentals',
-  subtitle: 'The complete 14-lesson curriculum matching StudySpanish.com Unit 1',
+  subtitle: 'Topics 1–14: Foundations inspired by the StudySpanish Unit 1 sequence',
   description: 'Master the core building blocks of beginner Spanish: noun genders, numbers 1–30, plurals, articles, the verb form "hay", subject pronouns, all three regular verb conjugations (-ar, -er, -ir), descriptive adjectives, and the days of the week.',
   iconName: 'BookOpen',
   colorTheme: 'emerald',

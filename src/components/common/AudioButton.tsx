@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Volume2 } from 'lucide-react';
 import { audioService } from '../../utils/audio';
-import { useProgress } from '../../context/ProgressContext';
+import { useProgress } from '../../context/useProgress';
 
 interface AudioButtonProps {
   text: string;
@@ -53,14 +53,14 @@ export const AudioButton: React.FC<AudioButtonProps> = ({
     <button
       type="button"
       onClick={handlePlay}
-      className={`inline-flex items-center justify-center rounded-lg transition-all duration-150 active:scale-90 cursor-pointer ${sizeClasses[size]} ${variantClasses[variant]} ${isPlaying ? 'ring-2 ring-indigo-400 ring-offset-1 animate-pulse' : ''} ${className}`}
+      className={`inline-flex items-center justify-center rounded-lg transition-[color,background-color,border-color,transform] duration-150 active:scale-90 cursor-pointer ${sizeClasses[size]} ${variantClasses[variant]} ${isPlaying ? 'ring-2 ring-indigo-400 ring-offset-1 animate-pulse' : ''} ${className}`}
       title="Listen to Spanish pronunciation"
       aria-label={`Listen to pronunciation of "${text}"`}
     >
       {isPlaying ? (
-        <Volume2 className={`${iconSizes[size]} text-indigo-500 animate-pulse`} />
+        <Volume2 className={`${iconSizes[size]} text-indigo-500 animate-pulse`} aria-hidden="true" />
       ) : (
-        <Volume2 className={iconSizes[size]} />
+        <Volume2 className={iconSizes[size]} aria-hidden="true" />
       )}
     </button>
   );

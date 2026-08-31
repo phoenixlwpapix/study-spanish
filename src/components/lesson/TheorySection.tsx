@@ -23,9 +23,9 @@ export const TheorySection: React.FC<TheorySectionProps> = ({ sections, onStartP
               <Sparkles className="w-4 h-4" />
               <span>Concept {idx + 1}</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900">
               {section.title}
-            </h3>
+            </h2>
             <p className="text-sm text-slate-600 mt-1 font-medium">
               <FormattedText text={section.summary} />
             </p>
@@ -165,13 +165,13 @@ export const TheorySection: React.FC<TheorySectionProps> = ({ sections, onStartP
 
       {/* Bottom CTA to test knowledge */}
       <div className="p-8 bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-3xl text-white text-center shadow-lg shadow-indigo-600/20 space-y-4">
-        <h4 className="text-2xl font-extrabold">Ready to Practice?</h4>
+        <h2 className="text-2xl font-extrabold">Ready to Practice?</h2>
         <p className="text-indigo-100 text-sm max-w-md mx-auto">
           Put what you just learned into practice with interactive challenges, instant feedback, and XP rewards!
         </p>
         <button
           onClick={onStartPractice}
-          className="px-8 py-3.5 rounded-2xl bg-white text-indigo-700 font-extrabold text-base hover:bg-indigo-50 shadow-md transition-all active:scale-95 cursor-pointer"
+          className="px-8 py-3.5 rounded-2xl bg-white text-indigo-700 font-extrabold text-base hover:bg-indigo-50 shadow-md transition-[color,background-color,transform] active:scale-95 cursor-pointer"
         >
           Start Practice Quiz
         </button>

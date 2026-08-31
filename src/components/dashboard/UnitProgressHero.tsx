@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Unit } from '../../types/curriculum';
-import { useProgress } from '../../context/ProgressContext';
+import { useProgress } from '../../context/useProgress';
 import { Flame, Zap, Award, Play, CheckCircle2 } from 'lucide-react';
 import { ProgressBar } from '../common/ProgressBar';
 
@@ -33,10 +33,10 @@ export const UnitProgressHero: React.FC<UnitProgressHeroProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-black uppercase tracking-wider">
-              🟢 Unit 1 Active
+              🟢 Unit {unit.id} Active
             </span>
             <span className="text-xs font-semibold text-slate-300">
-              {totalLessons} Lessons • CEFR A1 Fundamentals
+              {totalLessons} Interactive Lessons
             </span>
           </div>
 
@@ -79,19 +79,19 @@ export const UnitProgressHero: React.FC<UnitProgressHeroProps> = ({
           <div className="flex flex-col sm:flex-row md:flex-col gap-2">
             <button
               onClick={onContinueLearning}
-              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer"
+              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition-[transform,box-shadow] active:scale-95 cursor-pointer"
             >
               <Play className="w-4 h-4 fill-white" />
               <span>{completedCount === 0 ? 'Start First Lesson' : 'Continue Learning'}</span>
             </button>
 
-            {completedCount >= 4 && (
+            {completedCount >= Math.min(4, totalLessons) && (
               <button
                 onClick={onOpenExam}
                 className="w-full py-2.5 px-4 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-amber-300 border border-amber-400/30 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Award className="w-4 h-4" />
-                <span>{examRecord?.passed ? 'Retake Unit Exam' : 'Take Unit 1 Exam'}</span>
+                <span>{examRecord?.passed ? `Retake Unit ${unit.id} Checkpoint` : `Take Unit ${unit.id} Checkpoint`}</span>
               </button>
             )}
           </div>

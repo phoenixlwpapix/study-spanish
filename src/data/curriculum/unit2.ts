@@ -863,8 +863,8 @@ export const unit2: Unit = {
 
   masteryExam: {
     id: 'u2-exam',
-    title: 'Unit 2 Comprehensive Mastery Exam',
-    description: '10 questions testing Ser vs Estar, Negation, Questions, Possessives, Tener/Venir, Weather, Personal "a", and Contractions.',
+    title: 'Unit 2 Topic Checkpoint',
+    description: 'A short checkpoint covering representative topics from ser vs. estar, questions, tener expressions, and contractions.',
     passingScore: 80,
     exercises: [
       {

@@ -15,10 +15,38 @@
     min-height: 100vh;
   }
 
+  button,
+  a,
+  input,
+  [role='button'],
+  [role='tab'] {
+    touch-action: manipulation;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  [role='button']:focus-visible,
+  [role='tab']:focus-visible {
+    outline: 3px solid #818cf8;
+    outline-offset: 3px;
+  }
+
   #root {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

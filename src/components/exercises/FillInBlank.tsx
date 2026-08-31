@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import type { FillInBlankExercise } from '../../types/curriculum';
 import { AccentKeyboard } from '../common/AccentKeyboard';
 import { AudioButton } from '../common/AudioButton';
@@ -23,17 +23,9 @@ export const FillInBlank: React.FC<FillInBlankProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Randomize word bank tokens order
-  const [shuffledWordBank, setShuffledWordBank] = useState(() => 
+  const [shuffledWordBank] = useState(() =>
     exercise.wordBank ? shuffleArray(exercise.wordBank) : []
   );
-
-  useEffect(() => {
-    if (exercise.wordBank) {
-      setShuffledWordBank(shuffleArray(exercise.wordBank));
-    } else {
-      setShuffledWordBank([]);
-    }
-  }, [exercise.id, exercise.wordBank]);
 
   const handleInsertAccent = (char: string) => {
     if (disabled || isSubmitted) return;
@@ -79,11 +71,14 @@ export const FillInBlank: React.FC<FillInBlankProps> = ({
           <input
             ref={inputRef}
             type="text"
+            name={`answer-${exercise.id}`}
+            aria-label="Fill in the blank answer"
+            autoComplete="off"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             disabled={disabled || isSubmitted}
-            placeholder="type answer..."
-            className={`w-40 sm:w-48 text-center font-bold px-3 py-2 text-lg rounded-xl border-2 transition-all outline-none ${
+            placeholder="Type your answer…"
+            className={`w-40 sm:w-48 text-center font-bold px-3 py-2 text-lg rounded-xl border-2 transition-colors outline-none ${
               isSubmitted
                 ? isCorrect
                   ? 'border-emerald-500 bg-emerald-50 text-emerald-900 ring-2 ring-emerald-300'
@@ -118,7 +113,7 @@ export const FillInBlank: React.FC<FillInBlankProps> = ({
                 key={idx}
                 type="button"
                 onClick={() => handleWordBankSelect(word)}
-                className="px-3.5 py-1.5 bg-white hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-300 border border-slate-200 text-slate-800 text-sm font-semibold rounded-xl shadow-xs active:scale-95 transition-all cursor-pointer"
+                className="px-3.5 py-1.5 bg-white hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-300 border border-slate-200 text-slate-800 text-sm font-semibold rounded-xl shadow-xs active:scale-95 transition-[color,background-color,border-color,transform] cursor-pointer"
               >
                 {word}
               </button>

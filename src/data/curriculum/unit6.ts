@@ -3,8 +3,8 @@ import type { Unit } from './types';
 export const unit6: Unit = {
   id: 6,
   title: 'Unit 6: Preterite vs. Imperfect (Past Tenses)',
-  subtitle: 'Lessons 62–74: The Masterclass of Spanish Past Tense Storytelling',
-  description: 'Master the defining challenge of Spanish grammar: Preterite (completed, specific actions) vs. Imperfect (ongoing background, habits, descriptions), regular endings (-é/-í vs -aba/-ía), -car/-gar/-zar shifts, stem-changers, and irregular stems (fui, estuve, tuve, dije).',
+  subtitle: '6 selected lessons from topics 62–74: Preterite and imperfect essentials',
+  description: 'A condensed introduction to Spanish past-tense storytelling: preterite for completed events, imperfect for background and habits, regular endings, and high-frequency irregular preterite stems.',
   iconName: 'History',
   colorTheme: 'red',
   isAvailable: true,
@@ -307,7 +307,7 @@ export const unit6: Unit = {
       slug: 'preterite-6',
       unitId: 6,
       order: 72,
-      title: '72. Irregular Preterite Stems',
+      title: '72. Preterite VI: Irregular Stems',
       subtitle: 'Ser/Ir (fui), Estar (estuve), Tener (tuve), Hacer (hice), Decir (dije)',
       estimatedMinutes: 12,
       iconName: 'Zap',
@@ -362,8 +362,8 @@ export const unit6: Unit = {
 
   masteryExam: {
     id: 'u6-exam',
-    title: 'Unit 6 Comprehensive Mastery Exam',
-    description: '10 questions testing Preterite vs Imperfect distinctions, regular endings, and irregular stems (fui, estuve, hice, dije).',
+    title: 'Unit 6 Selected Topics Checkpoint',
+    description: 'A short checkpoint covering the preterite/imperfect distinction and representative irregular preterite stems.',
     passingScore: 80,
     exercises: [
       {

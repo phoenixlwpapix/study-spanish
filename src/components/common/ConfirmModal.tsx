@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { AlertTriangle, X } from 'lucide-react';
+import { useDialogFocus } from '../../hooks/useDialogFocus';
 
 interface ConfirmModalProps {
   isOpen: boolean;
@@ -22,6 +23,10 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  const titleId = useId();
+  const descriptionId = useId();
+  const { dialogRef, initialFocusRef } = useDialogFocus(isOpen, onCancel);
+
   if (!isOpen) return null;
 
   const getVariantStyles = () => {
@@ -47,32 +52,37 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   const styles = getVariantStyles();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 overscroll-contain">
       <div 
-        className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200"
+        ref={dialogRef}
+        className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 overflow-hidden transform transition-[transform,opacity] animate-in zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={descriptionId}
+        tabIndex={-1}
       >
         <button
           onClick={onCancel}
           className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-100 transition-colors"
           aria-label="Close"
         >
-          <X className="w-5 h-5" />
+          <X className="w-5 h-5" aria-hidden="true" />
         </button>
 
         <div className="flex items-start gap-4">
           <div className={`p-3 rounded-full shrink-0 ${styles.iconBg}`}>
-            <AlertTriangle className="w-6 h-6" />
+            <AlertTriangle className="w-6 h-6" aria-hidden="true" />
           </div>
           <div className="flex-1 pt-0.5">
-            <h3 className="text-lg font-bold text-slate-900">{title}</h3>
-            <p className="mt-2 text-sm text-slate-600 leading-relaxed">{message}</p>
+            <h3 id={titleId} className="text-lg font-bold text-slate-900">{title}</h3>
+            <p id={descriptionId} className="mt-2 text-sm text-slate-600 leading-relaxed">{message}</p>
           </div>
         </div>
 
         <div className="mt-6 flex items-center justify-end gap-3">
           <button
+            ref={initialFocusRef}
             type="button"
             onClick={onCancel}
             className="px-4 py-2 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors cursor-pointer"

@@ -13,19 +13,23 @@ import {
   Menu,
   X
 } from 'lucide-react';
-import { useProgress } from '../../context/ProgressContext';
+import { useProgress } from '../../context/useProgress';
 import { ConfirmModal } from '../common/ConfirmModal';
 
 interface NavbarProps {
   activeTab: 'curriculum' | 'cheatsheet' | 'mistakes' | 'exam';
+  selectedUnitId: number;
   onSelectTab: (tab: 'curriculum' | 'cheatsheet' | 'mistakes' | 'exam') => void;
   onOpenExam: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, onSelectTab, onOpenExam }) => {
+export const Navbar: React.FC<NavbarProps> = ({ activeTab, selectedUnitId, onSelectTab, onOpenExam }) => {
   const { progress, updateSettings, resetProgressData } = useProgress();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const activeMistakeCount = progress.mistakes.filter(
+    (mistake) => mistake.reviewStatus !== 'mastered',
+  ).length;
 
   const toggleSound = () => {
     updateSettings({ soundEffects: !progress.settings.soundEffects });
@@ -50,7 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onSelectTab, onOpenEx
       id: 'mistakes', 
       label: 'Mistakes Notebook', 
       icon: AlertCircle, 
-      badge: progress.mistakes.length > 0 ? progress.mistakes.length : undefined 
+      badge: activeMistakeCount > 0 ? activeMistakeCount : undefined
     },
   ];
 
@@ -61,9 +65,11 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onSelectTab, onOpenEx
           <div className="flex items-center justify-between h-16">
             
             {/* Brand / Logo */}
-            <div 
-              className="flex items-center gap-3 cursor-pointer select-none"
+            <button
+              type="button"
+              className="flex items-center gap-3 cursor-pointer select-none text-left"
               onClick={() => onSelectTab('curriculum')}
+              aria-label="Go to curriculum home"
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 via-amber-500 to-amber-600 flex items-center justify-center text-white shadow-md shadow-amber-500/20">
                 <GraduationCap className="w-6 h-6" />
@@ -78,10 +84,10 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onSelectTab, onOpenEx
                   </span>
                 </div>
                 <p className="text-[11px] font-medium text-slate-500 hidden sm:block">
-                  Unit 1 Fundamentals • English-to-Spanish
+                  Unit {selectedUnitId} Selected • English-to-Spanish
                 </p>
               </div>
-            </div>
+            </button>
 
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center gap-1">
@@ -92,7 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onSelectTab, onOpenEx
                   <button
                     key={item.id}
                     onClick={() => onSelectTab(item.id)}
-                    className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
+                    className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${
                       isActive 
                         ? 'bg-indigo-50 text-indigo-700 shadow-xs' 
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -111,10 +117,10 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onSelectTab, onOpenEx
 
               <button
                 onClick={onOpenExam}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-colors cursor-pointer"
               >
                 <Award className="w-4 h-4 text-emerald-600" />
-                <span>Unit 1 Exam</span>
+                <span>Unit {selectedUnitId} Checkpoint</span>
               </button>
             </nav>
 
@@ -142,13 +148,14 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onSelectTab, onOpenEx
               {/* Sound Effects Toggle */}
               <button
                 onClick={toggleSound}
-                className={`p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                className={`p-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
                   progress.settings.soundEffects 
                     ? 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200' 
                     : 'bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100'
                 }`}
                 title={progress.settings.soundEffects ? 'Sound FX On' : 'Sound FX Muted'}
                 aria-label="Toggle sound effects"
+                aria-pressed={progress.settings.soundEffects}
               >
                 {progress.settings.soundEffects ? (
                   <Volume2 className="w-4 h-4" />
@@ -172,6 +179,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onSelectTab, onOpenEx
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="p-2 md:hidden text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 cursor-pointer"
                 aria-label="Toggle menu"
+                aria-expanded={mobileMenuOpen}
+                aria-controls="mobile-navigation"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
@@ -181,7 +190,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onSelectTab, onOpenEx
 
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-2 pb-4 space-y-1">
+          <div id="mobile-navigation" className="md:hidden border-t border-slate-200 bg-white px-4 pt-2 pb-4 space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -216,7 +225,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onSelectTab, onOpenEx
               className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold text-emerald-700 bg-emerald-50"
             >
               <Award className="w-4 h-4 text-emerald-600" />
-              <span>Unit 1 Exam</span>
+              <span>Unit {selectedUnitId} Checkpoint</span>
             </button>
           </div>
         )}

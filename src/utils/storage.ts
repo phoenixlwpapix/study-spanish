@@ -1,4 +1,4 @@
-import type { UserProgressState } from '../types/progress';
+import type { MistakeItem, UserProgressState } from '../types/progress';
 
 const STORAGE_KEY = 'study_spanish_progress_v1';
 
@@ -63,10 +63,30 @@ export function loadProgress(): UserProgressState {
       }
     }
 
+    const now = Date.now();
+    const sanitizedMistakes = Array.isArray(parsed.mistakes)
+      ? parsed.mistakes.map((item: MistakeItem) => {
+          const reviewStatus = item.reviewStatus === 'mastered' ? 'mastered' : 'learning';
+          return {
+            ...item,
+            reviewedCount: Number.isFinite(item.reviewedCount) ? item.reviewedCount : 0,
+            consecutiveCorrect: Number.isFinite(item.consecutiveCorrect) ? item.consecutiveCorrect : 0,
+            reviewStatus,
+            nextReviewAt: reviewStatus === 'mastered'
+              ? null
+              : typeof item.nextReviewAt === 'number'
+                ? item.nextReviewAt
+                : item.timestamp || now,
+            lastReviewedAt: typeof item.lastReviewedAt === 'number' ? item.lastReviewedAt : null,
+          };
+        })
+      : [];
+
     return {
       ...defaultState,
       ...parsed,
       lessonScores: sanitizedLessonScores,
+      mistakes: sanitizedMistakes,
       streakDays: streak,
       settings: {
         ...defaultState.settings,
