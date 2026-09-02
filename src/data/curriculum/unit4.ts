@@ -1441,24 +1441,29 @@ export const unit4: Unit = {
                 "¿A QUIÉN? (To/for whom is it done?)",
                 "Indirect Object (IO)",
                 "le, les",
-                "Compro el libro a Juan → LE compro el libro"
+                "Le compro el libro a Juan → LE compro el libro"
               ]
             ]
           },
           "content": [
-            "In the sentence: *\"Yo escribo una carta a mi amigo\"*: ",
+            "In the sentence: *\"Yo le escribo una carta a mi amigo\"*: ",
             "1. *What do I write?* → *Una carta* (Direct Object) → **la**",
             "2. *To whom do I write?* → *A mi amigo* (Indirect Object) → **le**"
           ],
           "examples": [
             {
+              "spanish": "Yo le escribo una carta. (a mi amigo)",
+              "english": "I write a letter to him. (Indirect Object: le)",
+              "audio": "Yo le escribo una carta."
+            },
+            {
               "spanish": "Yo la escribo. (la carta)",
-              "english": "I write it. (Direct Object)",
+              "english": "I write it. (Direct Object: la)",
               "audio": "Yo la escribo."
             },
             {
               "spanish": "Yo le escribo. (a mi amigo)",
-              "english": "I write to him. (Indirect Object)",
+              "english": "I write to him. (Indirect Object: le)",
               "audio": "Yo le escribo."
             }
           ]
@@ -1555,7 +1560,7 @@ export const unit4: Unit = {
         {
           "id": "u4-l46-ex3",
           "type": "matching-pairs",
-          "prompt": "Identify whether the underlined element is a Direct Object or Indirect Object in: \"Doy el dinero a Carlos\"",
+          "prompt": "Identify whether the element is a Direct Object or Indirect Object in: \"Le doy el dinero a Carlos\"",
           "explanation": "Distinguish direct receiver from beneficiary.",
           "pairs": [
             {
@@ -1602,7 +1607,7 @@ export const unit4: Unit = {
           "content": [
             "Spanish dislikes the tongue-twister repetition of two \"L\" sounds in a row (*\"le lo doy\"*, *\"les las mando\"*).",
             "Therefore, whenever **le** or **les** is immediately followed by **lo, la, los, or las**, the indirect pronoun **le/les changes into SE**.",
-            "Formula: *Yo doy el libro (lo) a Juan (le)* → *Yo **se lo** doy*."
+            "Formula: *Yo le doy el libro (lo) a Juan (le)* → *Yo **se lo** doy*."
           ],
           "examples": [
             {
@@ -1611,7 +1616,7 @@ export const unit4: Unit = {
               "audio": "Sí, te la paso."
             },
             {
-              "spanish": "Yo doy el dinero a María. → Yo se lo doy.",
+              "spanish": "Yo le doy el dinero a María. → Yo se lo doy.",
               "english": "I give the money to Maria. (le + lo → se lo)",
               "audio": "Yo se lo doy."
             },
