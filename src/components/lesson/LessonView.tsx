@@ -22,6 +22,7 @@ interface LessonViewProps {
   lesson: Lesson;
   onBackToDashboard: () => void;
   onSelectLesson: (lessonId: string) => void;
+  onOpenExam?: () => void;
 }
 
 interface TabItem {
@@ -35,6 +36,7 @@ export const LessonView: React.FC<LessonViewProps> = ({
   lesson,
   onBackToDashboard,
   onSelectLesson,
+  onOpenExam,
 }) => {
   const [activeTab, setActiveTab] = useState<'learn' | 'practice' | 'flashcards' | 'vocab'>('learn');
   const { isLessonCompleted, getLessonScore } = useProgress();
@@ -216,6 +218,8 @@ export const LessonView: React.FC<LessonViewProps> = ({
             unitId={lesson.unitId}
             onFinishLesson={() => {}}
             hasNextLesson={Boolean(nextLesson)}
+            isLastLessonOfUnit={lessonPosition === lessonCount && Boolean(currentUnit?.masteryExam)}
+            onOpenExam={onOpenExam}
             onGoToNextLesson={() => {
               if (nextLesson) {
                 onSelectLesson(nextLesson.id);

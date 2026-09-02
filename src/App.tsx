@@ -175,9 +175,13 @@ function AppContent() {
     handleSelectLesson(targetId);
   };
 
-  const handleOpenExam = () => {
+  const handleOpenExam = (unitId?: number) => {
     void loadUnitExamModal();
-    navigate({ ...navigation, isExamModalOpen: true });
+    navigate({
+      ...navigation,
+      selectedUnitId: unitId ?? navigation.selectedUnitId,
+      isExamModalOpen: true,
+    });
   };
 
   const handleSelectUnit = (unitId: number) => {
@@ -238,6 +242,7 @@ function AppContent() {
               lesson={activeLesson}
               onBackToDashboard={handleBackToDashboard}
               onSelectLesson={handleSelectLesson}
+              onOpenExam={() => handleOpenExam(activeLesson.unitId)}
             />
           </Suspense>
         ) : (

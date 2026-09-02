@@ -154,7 +154,7 @@ export const CourseRoadmap: React.FC<CourseRoadmapProps> = ({ onSelectLesson, cu
                             </span>
                             <div>
                               <div className="text-sm font-bold text-slate-800">
-                                {lesson.title}
+                                {lesson.title.replace(/^\d+\.\s*/, '')}
                               </div>
                               <div className="text-[11px] text-slate-500 line-clamp-1">
                                 {lesson.subtitle}

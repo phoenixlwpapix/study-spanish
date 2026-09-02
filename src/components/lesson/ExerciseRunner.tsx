@@ -22,6 +22,8 @@ interface ExerciseRunnerProps {
   hasNextLesson?: boolean;
   mode?: ExerciseMode;
   passingScore?: number;
+  isLastLessonOfUnit?: boolean;
+  onOpenExam?: () => void;
 }
 
 export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
@@ -33,6 +35,8 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
   hasNextLesson = false,
   mode = 'lesson',
   passingScore = 70,
+  isLastLessonOfUnit = false,
+  onOpenExam,
 }) => {
   const { recordMistake, completeLesson } = useProgress();
 
@@ -204,7 +208,11 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
             {isPassed ? '¡Excelente Trabajo!' : 'Good Effort! Keep Practicing!'}
           </h2>
           <p className="text-slate-600 mt-2 text-sm sm:text-base">
-            {isPassed 
+            {isLastLessonOfUnit && mode !== 'exam' ? (
+              isPassed
+                ? `🎉 You have completed all lessons in Unit ${unitId}! Take the Unit Checkpoint Exam now to prove your mastery.`
+                : `You've reached the end of Unit ${unitId}! Review your mistakes or take the Unit Checkpoint Exam when ready.`
+            ) : isPassed 
               ? 'You have successfully completed this interactive lesson and mastered the key concepts.'
               : 'Review your mistakes and give it another try to earn full mastery score!'}
           </p>
@@ -234,12 +242,27 @@ export const ExerciseRunner: React.FC<ExerciseRunnerProps> = ({
 
         {/* Action Buttons */}
         <div className="space-y-3 pt-2">
+          {/* Direct Unit Exam Button when completing the last lesson of a unit */}
+          {isLastLessonOfUnit && onOpenExam && mode !== 'exam' && (
+            <button
+              onClick={onOpenExam}
+              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-base shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2.5 transition-all active:scale-[0.99] cursor-pointer"
+            >
+              <Award className="w-5 h-5 text-amber-300" />
+              <span>Take Unit {unitId} Checkpoint Exam</span>
+            </button>
+          )}
+
           {hasNextLesson && onGoToNextLesson && (
             <button
               onClick={onGoToNextLesson}
-              className="w-full py-3.5 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-base shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              className={`w-full py-3.5 px-6 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-colors cursor-pointer ${
+                isLastLessonOfUnit && onOpenExam && mode !== 'exam'
+                  ? 'bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200'
+                  : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-600/30'
+              }`}
             >
-              <span>Next Lesson</span>
+              <span>{isLastLessonOfUnit ? 'Continue to Next Unit' : 'Next Lesson'}</span>
               <ArrowRight className="w-5 h-5" />
             </button>
           )}

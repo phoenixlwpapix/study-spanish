@@ -198,7 +198,7 @@ export const CurriculumSidebar: React.FC<CurriculumSidebarProps> = ({
                             {lesson.order}
                           </span>
                           <span className="truncate text-[11px] group-hover:font-bold">
-                            {lesson.title}
+                            {lesson.title.replace(/^\d+\.\s*/, '')}
                           </span>
                         </div>
 

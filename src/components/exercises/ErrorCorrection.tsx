@@ -12,6 +12,49 @@ interface ErrorCorrectionProps {
   disabled?: boolean;
 }
 
+function splitSentenceOnErrorWord(
+  sentence: string,
+  errorWord: string
+): { before: string; match: string; after: string } {
+  if (!errorWord) {
+    return { before: sentence, match: '', after: '' };
+  }
+
+  const escaped = errorWord.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+  // Match with word/punctuation boundaries (accounting for Spanish punctuation like ¡¿)
+  const boundaryRegex = new RegExp(
+    `(?<=^|[\\s¡¿.,;:!?()"\`'])${escaped}(?=[\\s¡¿.,;:!?()"\`']|$)`,
+    'u'
+  );
+  const match = boundaryRegex.exec(sentence);
+
+  if (match && match.index !== undefined) {
+    const start = match.index;
+    const end = start + match[0].length;
+    return {
+      before: sentence.slice(0, start),
+      match: sentence.slice(start, end),
+      after: sentence.slice(end),
+    };
+  }
+
+  // Fallback to exact substring if boundary regex did not match
+  const idx = sentence.indexOf(errorWord);
+  if (idx !== -1) {
+    return {
+      before: sentence.slice(0, idx),
+      match: sentence.slice(idx, idx + errorWord.length),
+      after: sentence.slice(idx + errorWord.length),
+    };
+  }
+
+  return {
+    before: sentence,
+    match: '',
+    after: '',
+  };
+}
+
 export const ErrorCorrection: React.FC<ErrorCorrectionProps> = ({
   exercise,
   selectedOption,
@@ -30,8 +73,11 @@ export const ErrorCorrection: React.FC<ErrorCorrectionProps> = ({
     onSelectOption(opt);
   };
 
-  // Render the incorrect sentence with the erroneous word highlighted
-  const parts = exercise.incorrectSentence.split(exercise.errorWord);
+  // Accurately locate and extract the error word within the incorrect sentence
+  const { before, match, after } = splitSentenceOnErrorWord(
+    exercise.incorrectSentence,
+    exercise.errorWord
+  );
 
   return (
     <div className="space-y-5">
@@ -49,11 +95,13 @@ export const ErrorCorrection: React.FC<ErrorCorrectionProps> = ({
       {/* Sentence with Highlighted Error */}
       <div className="p-6 bg-white border-2 border-slate-200 rounded-2xl text-center shadow-xs">
         <span className="text-xl sm:text-2xl font-bold text-slate-800">
-          {parts[0]}
-          <span className="inline-block px-2 py-0.5 mx-1 rounded-lg bg-rose-100 text-rose-800 border-2 border-rose-300 font-extrabold underline decoration-rose-500 decoration-wavy">
-            {exercise.errorWord}
-          </span>
-          {parts[1]}
+          {before}
+          {match && (
+            <span className="inline-block px-2 py-0.5 mx-1 rounded-lg bg-rose-100 text-rose-800 border-2 border-rose-300 font-extrabold underline decoration-rose-500 decoration-wavy">
+              {match}
+            </span>
+          )}
+          {after}
         </span>
       </div>
 

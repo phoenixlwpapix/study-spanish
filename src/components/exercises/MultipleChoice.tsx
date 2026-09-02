@@ -81,8 +81,16 @@ export const MultipleChoice: React.FC<MultipleChoiceProps> = ({
                 </span>
                 <div>
                   <div className="text-base font-bold tracking-tight">{option.text}</div>
-                  {option.subtext && (
-                    <div className="text-xs text-slate-500 mt-0.5">{option.subtext}</div>
+                  {isSubmitted && option.subtext && (
+                    <div className={`text-xs mt-0.5 font-normal ${
+                      option.isCorrect
+                        ? 'text-emerald-800'
+                        : isSelected
+                          ? 'text-rose-800'
+                          : 'text-slate-500'
+                    }`}>
+                      {option.subtext}
+                    </div>
                   )}
                 </div>
               </div>

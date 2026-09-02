@@ -1279,9 +1279,9 @@ export const unit2: Unit = {
           type: 'error-identification',
           prompt: 'Find the mistake in this sentence:',
           incorrectSentence: 'En la biblioteca hay a muchos estudiantes estudiando.',
-          errorWord: 'a',
-          options: ['muchos', 'en', 'la', ''],
-          correctOption: '',
+          errorWord: 'hay a',
+          options: ['hay', 'hay de', 'hay en', 'hay con'],
+          correctOption: 'hay',
           explanation: 'The verb "HAY" NEVER takes the personal "a", even when followed by people: "hay muchos estudiantes".'
         }
       ]
