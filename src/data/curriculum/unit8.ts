@@ -649,28 +649,28 @@ export const unit8: Unit = {
         {
           "id": "u8-l89-ex1",
           "type": "matching-pairs",
-          "prompt": "Match each English meaning to the appropriate Spanish relative word:",
-          "explanation": "Relative pronoun review.",
+          "prompt": "Match each Spanish relative phrase with its English meaning:",
+          "explanation": "Review relative pronouns and adjectives (que, quien, lo que, cuyo).",
           "pairs": [
             {
               "id": "p1",
-              "left": "The book that I read",
-              "right": "El libro que leí"
+              "left": "El libro que leí",
+              "right": "The book that I read (que)"
             },
             {
               "id": "p2",
-              "left": "The girl with whom I spoke",
-              "right": "La chica con quien hablé"
+              "left": "La chica con quien hablé",
+              "right": "The girl with whom I spoke (con quien)"
             },
             {
               "id": "p3",
-              "left": "What I want is coffee",
-              "right": "Lo que quiero es café"
+              "left": "Lo que quiero es café",
+              "right": "What I want is coffee (lo que)"
             },
             {
               "id": "p4",
-              "left": "The man whose car is red",
-              "right": "El hombre cuyo coche es rojo"
+              "left": "El hombre cuyo coche es rojo",
+              "right": "The man whose car is red (cuyo)"
             }
           ]
         }

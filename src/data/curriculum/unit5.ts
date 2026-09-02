@@ -511,28 +511,28 @@ export const unit5: Unit = {
         {
           "id": "u5-l52-ex3",
           "type": "matching-pairs",
-          "prompt": "Match each numeral to its Spanish spelling:",
-          "explanation": "Check 100, 500, 700, 900.",
+          "prompt": "Match each Spanish numeral spelling with its digit:",
+          "explanation": "Check irregular numerals cien, quinientos, setecientos, novecientos.",
           "pairs": [
             {
               "id": "p1",
-              "left": "100",
-              "right": "cien"
+              "left": "cien",
+              "right": "100"
             },
             {
               "id": "p2",
-              "left": "500",
-              "right": "quinientos"
+              "left": "quinientos",
+              "right": "500"
             },
             {
               "id": "p3",
-              "left": "700",
-              "right": "setecientos"
+              "left": "setecientos",
+              "right": "700"
             },
             {
               "id": "p4",
-              "left": "900",
-              "right": "novecientos"
+              "left": "novecientos",
+              "right": "900"
             }
           ]
         }
@@ -790,28 +790,28 @@ export const unit5: Unit = {
         {
           "id": "u5-l53-ex4",
           "type": "matching-pairs",
-          "prompt": "Match the clock times with their Spanish descriptions:",
-          "explanation": "Reviewing time phrases.",
+          "prompt": "Match each Spanish time description with its numerical clock time:",
+          "explanation": "Practice \"y cuarto\", \"y media\", \"menos cuarto\", and \"en punto\".",
           "pairs": [
             {
               "id": "p1",
-              "left": "2:15",
-              "right": "Son las dos y cuarto"
+              "left": "Son las dos y cuarto",
+              "right": "2:15"
             },
             {
               "id": "p2",
-              "left": "6:30",
-              "right": "Son las seis y media"
+              "left": "Son las seis y media",
+              "right": "6:30"
             },
             {
               "id": "p3",
-              "left": "7:45",
-              "right": "Son las ocho menos cuarto"
+              "left": "Son las ocho menos cuarto",
+              "right": "7:45"
             },
             {
               "id": "p4",
-              "left": "1:00",
-              "right": "Es la una en punto"
+              "left": "Es la una en punto",
+              "right": "1:00"
             }
           ]
         }

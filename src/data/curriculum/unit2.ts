@@ -1180,13 +1180,13 @@ export const unit2: Unit = {
         {
           id: 'u2-l25-ex4',
           type: 'matching-pairs',
-          prompt: 'Match each weather condition to its Spanish equivalent:',
-          explanation: 'Notice which expressions use "hace", "está", or "hay".',
+          prompt: 'Match each Spanish weather expression with its English meaning:',
+          explanation: 'Notice which weather expressions use "hace" (with nouns), "está" (with adjectives/gerunds), "hay" (with nouns), or weather verbs like "nieva".',
           pairs: [
-            { id: 'p1', left: 'It is cold.', right: 'Hace frío.' },
-            { id: 'p2', left: 'It is foggy.', right: 'Hay niebla.' },
-            { id: 'p3', left: 'It is cloudy.', right: 'Está nublado.' },
-            { id: 'p4', left: 'It snows.', right: 'Nieva.' }
+            { id: 'p1', left: 'Hace frío.', right: 'It is cold.' },
+            { id: 'p2', left: 'Hay niebla.', right: 'It is foggy.' },
+            { id: 'p3', left: 'Está nublado.', right: 'It is cloudy.' },
+            { id: 'p4', left: 'Nieva.', right: 'It snows / is snowing.' }
           ]
         }
       ]

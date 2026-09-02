@@ -2068,28 +2068,28 @@ export const unit3: Unit = {
         {
           "id": "u3-l35-ex4",
           "type": "matching-pairs",
-          "prompt": "Match each ordinal number to its Spanish translation:",
-          "explanation": "Review 4th through 10th.",
+          "prompt": "Match each Spanish ordinal number with its English equivalent:",
+          "explanation": "Review ordinals 4th through 10th.",
           "pairs": [
             {
               "id": "p1",
-              "left": "4th",
-              "right": "cuarto"
+              "left": "cuarto",
+              "right": "4th (fourth)"
             },
             {
               "id": "p2",
-              "left": "5th",
-              "right": "quinto"
+              "left": "quinto",
+              "right": "5th (fifth)"
             },
             {
               "id": "p3",
-              "left": "7th",
-              "right": "séptimo"
+              "left": "séptimo",
+              "right": "7th (seventh)"
             },
             {
               "id": "p4",
-              "left": "10th",
-              "right": "décimo"
+              "left": "décimo",
+              "right": "10th (tenth)"
             }
           ]
         }
