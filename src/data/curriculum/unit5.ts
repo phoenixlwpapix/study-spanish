@@ -1021,13 +1021,13 @@ export const unit5: Unit = {
         {
           "id": "u5-l54-ex1",
           "type": "multiple-choice",
-          "prompt": "Which preposition completes: \"This gift is _______ (for) my mother\"?",
-          "explanation": "Recipient of a gift is a forward destination (P.E.R.F.E.C.T. Recipient), which requires PARA: \"para mi madre\".",
+          "prompt": "Complete the Spanish sentence for \"This gift is for my mother\" (recipient):\n\"Este regalo es _______.\"",
+          "explanation": "Recipient of a gift is a forward destination / recipient (P.E.R.F.E.C.T.), which requires PARA: \"para mi madre\".",
           "options": [
             {
               "id": "opt1",
               "text": "para mi madre",
-              "subtext": "Recipient → PARA",
+              "subtext": "Correct: recipient → PARA",
               "isCorrect": true
             },
             {
@@ -1045,7 +1045,7 @@ export const unit5: Unit = {
             {
               "id": "opt4",
               "text": "a mi madre",
-              "subtext": "Incorrect preposition for a gift",
+              "subtext": "Incorrect preposition for a gift recipient in this structure",
               "isCorrect": false
             }
           ]
@@ -1053,7 +1053,7 @@ export const unit5: Unit = {
         {
           "id": "u5-l54-ex2",
           "type": "fill-in-blank",
-          "prompt": "Complete with \"por\" or \"para\": \"I studied Spanish _______ three hours yesterday.\"",
+          "prompt": "Complete with \"por\" or \"para\" for duration in: \"Ayer estudié español [___] tres horas.\" (I studied Spanish for three hours yesterday)",
           "sentenceBefore": "Ayer estudié español",
           "sentenceAfter": "tres horas.",
           "correctAnswers": [
@@ -1274,7 +1274,7 @@ export const unit5: Unit = {
         {
           "id": "u5-l55-ex2",
           "type": "fill-in-blank",
-          "prompt": "Fill in the comparative for \"better\": \"This restaurant is _______ than the other one.\"",
+          "prompt": "Fill in the irregular comparative in: \"Este restaurante es [___] que el otro.\" (This restaurant is better than the other one)",
           "sentenceBefore": "Este restaurante es",
           "sentenceAfter": "que el otro.",
           "correctAnswers": [
@@ -1518,7 +1518,7 @@ export const unit5: Unit = {
         {
           "id": "u5-l56-ex2",
           "type": "fill-in-blank",
-          "prompt": "Fill in the neuter pronoun for an unknown object: \"What is _______ (this)?\"",
+          "prompt": "Fill in the neuter pronoun for an unknown object in: \"¿Qué es [___] en la caja?\" (What is this in the box?)",
           "sentenceBefore": "¿Qué es",
           "sentenceAfter": "en la caja?",
           "correctAnswers": [
@@ -2665,7 +2665,7 @@ export const unit5: Unit = {
         {
           "id": "u5-l61-ex2",
           "type": "fill-in-blank",
-          "prompt": "Complete for generalized concept: \"_______ (cats) sleep a lot.\"",
+          "prompt": "Fill in the general article in: \"[___] gatos duermen mucho durante el día.\" (Cats sleep a lot during the day)",
           "sentenceBefore": "",
           "sentenceAfter": "gatos duermen mucho durante el día.",
           "correctAnswers": [

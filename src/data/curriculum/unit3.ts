@@ -1990,31 +1990,31 @@ export const unit3: Unit = {
         {
           "id": "u3-l35-ex1",
           "type": "multiple-choice",
-          "prompt": "Which form correctly completes: \"Today is my _______ (first) day of school\"?",
-          "explanation": "\"Día\" is a masculine singular noun, so \"primero\" shortens (apocopates) to \"primer\".",
+          "prompt": "Complete the Spanish sentence for \"Today is the first day of school\":\n\"Hoy es _______ día de escuela.\"",
+          "explanation": "\"Día\" is a masculine singular noun, so it takes the masculine article \"el\" and \"primero\" apocopates (shortens) to \"primer\": \"el primer día\".",
           "options": [
             {
               "id": "opt1",
-              "text": "primer día",
-              "subtext": "Correct apocopated form",
+              "text": "el primer",
+              "subtext": "Correct: masculine singular definite article + apocopated \"primer\"",
               "isCorrect": true
             },
             {
               "id": "opt2",
-              "text": "primero día",
-              "subtext": "Incorrect: must drop the -o",
+              "text": "el primero",
+              "subtext": "Incorrect: \"primero\" must shorten to \"primer\" before a masculine noun",
               "isCorrect": false
             },
             {
               "id": "opt3",
-              "text": "primera día",
-              "subtext": "Incorrect: día is masculine",
+              "text": "la primera",
+              "subtext": "Incorrect: \"día\" is masculine, requiring \"el primer\"",
               "isCorrect": false
             },
             {
               "id": "opt4",
-              "text": "uno día",
-              "subtext": "Incorrect ordinal",
+              "text": "el uno",
+              "subtext": "Incorrect: ordinal number required",
               "isCorrect": false
             }
           ]
@@ -2291,7 +2291,7 @@ export const unit3: Unit = {
         {
           "id": "u3-l36-ex2",
           "type": "fill-in-blank",
-          "prompt": "Fill in the preposition used in Spanish dates: \"Today is the 10th _______ August.\"",
+          "prompt": "Fill in the preposition used in Spanish dates for: \"Hoy es el diez [___] agosto.\" (Today is August 10th)",
           "sentenceBefore": "Hoy es el diez",
           "sentenceAfter": "agosto.",
           "correctAnswers": [
@@ -2726,31 +2726,31 @@ export const unit3: Unit = {
         {
           "id": "u3-l38-ex1",
           "type": "multiple-choice",
-          "prompt": "Which word correctly completes: \"Julia has _______ (as many) friends as Sofia\"?",
-          "explanation": "\"Amigas\" is feminine plural, so it requires \"tantas amigas como\".",
+          "prompt": "Complete the Spanish comparison for \"Julia has as many friends as Sofia\":\n\"Julia tiene _______ Sofía.\"",
+          "explanation": "\"Amigas\" is a feminine plural noun, so it requires the feminine plural form \"tantas amigas como\".",
           "options": [
             {
               "id": "opt1",
               "text": "tantas amigas como",
-              "subtext": "Feminine plural agreement",
+              "subtext": "Correct feminine plural agreement",
               "isCorrect": true
             },
             {
               "id": "opt2",
               "text": "tan amigas como",
-              "subtext": "Incorrect: \"tan\" is only for adjectives",
+              "subtext": "Incorrect: \"tan\" is only used with adjectives/adverbs",
               "isCorrect": false
             },
             {
               "id": "opt3",
               "text": "tantos amigas como",
-              "subtext": "Masculine agreement error",
+              "subtext": "Incorrect: masculine agreement with feminine \"amigas\"",
               "isCorrect": false
             },
             {
               "id": "opt4",
               "text": "tanta amigas como",
-              "subtext": "Singular agreement error",
+              "subtext": "Incorrect: singular form with plural \"amigas\"",
               "isCorrect": false
             }
           ]
@@ -2758,7 +2758,7 @@ export const unit3: Unit = {
         {
           "id": "u3-l38-ex2",
           "type": "fill-in-blank",
-          "prompt": "Fill in the correct equality word for adjective comparison: \"My dog is _______ fast as yours.\"",
+          "prompt": "Fill in the equality comparison word (tan... como) in: \"Mi perro es [___] rápido como el tuyo.\" (My dog is as fast as yours)",
           "sentenceBefore": "Mi perro es",
           "sentenceAfter": "rápido como el tuyo.",
           "correctAnswers": [

@@ -181,7 +181,7 @@ export const unit6: Unit = {
         {
           "id": "u6-l62-ex2",
           "type": "fill-in-blank",
-          "prompt": "Fill in the trigger word for simultaneous ongoing background: \"_______ yo cocinaba, él miraba la televisión.\"",
+          "prompt": "Fill in the trigger word for simultaneous ongoing background in: \"[___] yo cocinaba, él miraba la televisión.\" (While I was cooking, he was watching TV)",
           "sentenceBefore": "",
           "sentenceAfter": "yo cocinaba, él miraba la televisión.",
           "correctAnswers": [
@@ -1309,7 +1309,7 @@ export const unit6: Unit = {
         {
           "id": "u6-l67-ex2",
           "type": "fill-in-blank",
-          "prompt": "Fill in the preterite of \"conocer\" to mean \"I met for the first time\": \"Last night I _______ Maria.\"",
+          "prompt": "Fill in the preterite of \"conocer\" (meaning \"to meet for the first time\") in: \"Anoche yo [___] a María en la fiesta.\" (Last night I met Maria at the party)",
           "sentenceBefore": "Anoche yo",
           "sentenceAfter": "a María en la fiesta.",
           "correctAnswers": [
@@ -1661,8 +1661,8 @@ export const unit6: Unit = {
         {
           "id": "u6-l69-ex1",
           "type": "multiple-choice",
-          "prompt": "Which verb forms correctly complete the simultaneous background: \"While we _______ (caminar), they _______ (hablar)\"?",
-          "explanation": "Simultaneous background actions linked by \"mientras\" require the Imperfect: \"caminábamos / hablaban\".",
+          "prompt": "Complete the Spanish sentence for simultaneous past background:\n\"Mientras nosotros _______, ellos _______.\" (While we were walking, they were talking)",
+          "explanation": "Simultaneous background actions linked by \"mientras\" require the Imperfect for both verbs: \"caminábamos / hablaban\".",
           "options": [
             {
               "id": "opt1",
@@ -1679,13 +1679,13 @@ export const unit6: Unit = {
             {
               "id": "opt3",
               "text": "caminábamos / hablaron",
-              "subtext": "Mismatch",
+              "subtext": "Mismatch: preterite and imperfect mixed",
               "isCorrect": false
             },
             {
               "id": "opt4",
               "text": "caminamos / hablaban",
-              "subtext": "Mismatch",
+              "subtext": "Mismatch: preterite and imperfect mixed",
               "isCorrect": false
             }
           ]
@@ -2466,7 +2466,7 @@ export const unit6: Unit = {
         {
           "id": "u6-l73-ex2",
           "type": "fill-in-blank",
-          "prompt": "Fill in the interrupting preterite verb of \"llamar\": \"I was studying when Carlos _______ me.\"",
+          "prompt": "Fill in the interrupting preterite verb in: \"Yo estudiaba en mi habitación cuando Carlos me [___] por teléfono.\" (I was studying in my room when Carlos called me on the phone)",
           "sentenceBefore": "Yo estudiaba en mi habitación cuando Carlos me",
           "sentenceAfter": "por teléfono.",
           "correctAnswers": [

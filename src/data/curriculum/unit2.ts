@@ -738,10 +738,10 @@ export const unit2: Unit = {
         {
           id: 'u2-l21-ex1',
           type: 'multiple-choice',
-          prompt: 'Which possessive adjective correctly fills the blank: "We love _______ (our) family"?',
-          explanation: '"Familia" is feminine singular, so it requires the feminine singular possessive "nuestra".',
+          prompt: 'Complete the Spanish sentence for "We love our family":\n"Nosotros queremos a _______."',
+          explanation: '"Familia" is feminine singular, so it requires the feminine singular possessive "nuestra familia".',
           options: [
-            { id: 'opt1', text: 'nuestra familia', subtext: 'Feminine singular agreement', isCorrect: true },
+            { id: 'opt1', text: 'nuestra familia', subtext: 'Correct feminine singular agreement', isCorrect: true },
             { id: 'opt2', text: 'nuestro familia', subtext: 'Incorrect: familia is feminine', isCorrect: false },
             { id: 'opt3', text: 'nuestras familia', subtext: 'Incorrect: familia is singular', isCorrect: false },
             { id: 'opt4', text: 'su familia', subtext: 'Means his/her/their family, not our', isCorrect: false }
@@ -750,7 +750,7 @@ export const unit2: Unit = {
         {
           id: 'u2-l21-ex2',
           type: 'fill-in-blank',
-          prompt: 'Fill in the plural possessive for "my": "I read _______ books."',
+          prompt: 'Fill in the plural possessive for "my" in: "Yo leo [___] libros favoritos." (I read my favorite books)',
           sentenceBefore: 'Yo leo',
           sentenceAfter: 'libros favoritos.',
           correctAnswers: ['mis', 'Mis'],
