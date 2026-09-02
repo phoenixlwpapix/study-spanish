@@ -1560,18 +1560,28 @@ export const unit4: Unit = {
         {
           "id": "u4-l46-ex3",
           "type": "matching-pairs",
-          "prompt": "Identify whether the element is a Direct Object or Indirect Object in: \"Le doy el dinero a Carlos\"",
-          "explanation": "Distinguish direct receiver from beneficiary.",
+          "prompt": "Match each phrase with its grammatical role and 3rd person pronoun (Direct vs. Indirect Object):",
+          "explanation": "Distinguish direct receiver (DO: lo/la/los/las) from beneficiary/recipient (IO: le/les).",
           "pairs": [
             {
               "id": "p1",
-              "left": "el dinero",
-              "right": "Direct Object (lo)"
+              "left": "una carta (Yo le escribo una carta)",
+              "right": "Direct Object (la)"
             },
             {
               "id": "p2",
-              "left": "a Carlos",
+              "left": "a mi hermano (Le doy un regalo a mi hermano)",
               "right": "Indirect Object (le)"
+            },
+            {
+              "id": "p3",
+              "left": "los libros (Yo los compro en la tienda)",
+              "right": "Direct Object (los)"
+            },
+            {
+              "id": "p4",
+              "left": "a los estudiantes (El profesor les explica la lección)",
+              "right": "Indirect Object (les)"
             }
           ]
         }
