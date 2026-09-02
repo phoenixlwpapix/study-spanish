@@ -16,7 +16,7 @@ interface CurriculumSidebarProps {
   selectedUnitId: number;
   onSelectUnit: (unitId: number) => void;
   onSelectLesson: (lessonId: string) => void;
-  onOpenExam: () => void;
+  onOpenExam: (unitId: number) => void;
 }
 
 export const CurriculumSidebar: React.FC<CurriculumSidebarProps> = ({
@@ -213,8 +213,7 @@ export const CurriculumSidebar: React.FC<CurriculumSidebarProps> = ({
                   <button
                     type="button"
                     onClick={() => {
-                      onSelectUnit(unit.id);
-                      onOpenExam();
+                      onOpenExam(unit.id);
                     }}
                     className={`w-full mt-1 px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
                       examPassed

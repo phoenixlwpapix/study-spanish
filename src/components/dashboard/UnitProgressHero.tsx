@@ -7,7 +7,7 @@ import { ProgressBar } from '../common/ProgressBar';
 interface UnitProgressHeroProps {
   unit: Unit;
   onContinueLearning: () => void;
-  onOpenExam: () => void;
+  onOpenExam: (unitId?: number) => void;
 }
 
 export const UnitProgressHero: React.FC<UnitProgressHeroProps> = ({
@@ -87,7 +87,7 @@ export const UnitProgressHero: React.FC<UnitProgressHeroProps> = ({
 
             {completedCount >= Math.min(4, totalLessons) && (
               <button
-                onClick={onOpenExam}
+                onClick={() => onOpenExam(unit.id)}
                 className="w-full py-2.5 px-4 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-amber-300 border border-amber-400/30 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Award className="w-4 h-4" />
