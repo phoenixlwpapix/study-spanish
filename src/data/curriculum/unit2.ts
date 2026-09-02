@@ -762,7 +762,7 @@ export const unit2: Unit = {
           id: 'u2-l21-ex3',
           type: 'sentence-builder',
           prompt: 'Translate: "Where are your (informal) keys?"',
-          targetEnglish: 'Where are your keys?',
+          targetEnglish: 'Where are your (informal) keys?',
           correctTokens: ['¿Dónde', 'están', 'tus', 'llaves?'],
           availableTokens: ['¿Dónde', 'están', 'tus', 'llaves?', 'tu', 'mis', 'está'],
           explanation: '"¿Dónde están tus llaves?" ("Tus" matches plural "llaves").'

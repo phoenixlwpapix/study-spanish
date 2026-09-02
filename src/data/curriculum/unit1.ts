@@ -949,7 +949,7 @@ export const unit1: Unit = {
           id: 'u1-l8-ex3',
           type: 'sentence-builder',
           prompt: 'Translate into Spanish: "You (informal) speak Spanish"',
-          targetEnglish: 'You speak Spanish',
+          targetEnglish: 'You (informal) speak Spanish',
           correctTokens: ['Tú', 'hablas', 'español'],
           availableTokens: ['Tú', 'hablas', 'español', 'hablo', 'habla', 'inglés'],
           explanation: '"Tú hablas español." (Tú takes -as ending).'

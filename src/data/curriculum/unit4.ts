@@ -526,7 +526,7 @@ export const unit4: Unit = {
           "id": "u4-l41-ex3",
           "type": "sentence-builder",
           "prompt": "Translate into Spanish: \"I see you (informal) every day\"",
-          "targetEnglish": "I see you every day",
+          "targetEnglish": "I see you (informal) every day",
           "correctTokens": [
             "Yo",
             "te",
@@ -759,7 +759,7 @@ export const unit4: Unit = {
           "id": "u4-l42-ex3",
           "type": "sentence-builder",
           "prompt": "Translate into Spanish: \"We are going to buy it (the car)\"",
-          "targetEnglish": "We are going to buy it",
+          "targetEnglish": "We are going to buy it (the car)",
           "correctTokens": [
             "Nosotros",
             "vamos",
@@ -958,7 +958,7 @@ export const unit4: Unit = {
           "id": "u4-l43-ex3",
           "type": "sentence-builder",
           "prompt": "Translate: \"I know him (Carlos) very well\"",
-          "targetEnglish": "I know him very well",
+          "targetEnglish": "I know him (Carlos) very well",
           "correctTokens": [
             "Yo",
             "lo",
@@ -1737,7 +1737,7 @@ export const unit4: Unit = {
           "id": "u4-l47-ex3",
           "type": "sentence-builder",
           "prompt": "Translate into Spanish: \"She sends it (the letter) to them\"",
-          "targetEnglish": "She sends it to them",
+          "targetEnglish": "She sends it (the letter) to them",
           "correctTokens": [
             "Ella",
             "se",
@@ -2243,7 +2243,7 @@ export const unit4: Unit = {
           "id": "u4-l49-ex3",
           "type": "sentence-builder",
           "prompt": "Translate into Spanish: \"What are you (informal) doing right now?\"",
-          "targetEnglish": "What are you doing right now?",
+          "targetEnglish": "What are you (informal) doing right now?",
           "correctTokens": [
             "¿Qué",
             "estás",

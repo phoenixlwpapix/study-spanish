@@ -1538,7 +1538,7 @@ export const unit5: Unit = {
           "id": "u5-l56-ex3",
           "type": "sentence-builder",
           "prompt": "Translate into Spanish: \"Those mountains over there (far away) are very high\"",
-          "targetEnglish": "Those mountains over there are very high",
+          "targetEnglish": "Those mountains over there (far away) are very high",
           "correctTokens": [
             "Aquellas",
             "montañas",
