@@ -1,5 +1,5 @@
 import React, { useId } from 'react';
-import { getUnitById, unit1 } from '../../data/curriculum';
+import { getUnitById } from '../../data/curriculum';
 import { ExerciseRunner } from '../lesson/ExerciseRunner';
 import { Award, X } from 'lucide-react';
 import { useProgress } from '../../context/useProgress';
@@ -16,10 +16,11 @@ export const UnitExamModal: React.FC<UnitExamModalProps> = ({ isOpen, onClose, u
   const titleId = useId();
   const descriptionId = useId();
   const { dialogRef, initialFocusRef } = useDialogFocus(isOpen, onClose);
-  const unit = getUnitById(unitId) || unit1;
-  const exam = unit.masteryExam || unit1.masteryExam;
+  const fallbackUnit = getUnitById(1);
+  const unit = getUnitById(unitId) ?? fallbackUnit;
+  const exam = unit?.masteryExam ?? fallbackUnit?.masteryExam;
 
-  if (!isOpen || !exam) return null;
+  if (!isOpen || !unit || !exam) return null;
 
   const handleFinishExam = (score: number, maxScore: number) => {
     const percentage = Math.round((score / maxScore) * 100);

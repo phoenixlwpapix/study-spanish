@@ -1,12 +1,13 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { ProgressProvider } from './context/ProgressContext';
 import { useProgress } from './context/useProgress';
-import { allUnits, getUnitById, getLessonById } from './data/curriculum';
+import { allUnits, getUnitById, getLessonById, loadCurriculum } from './data/curriculum';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { UnitProgressHero } from './components/dashboard/UnitProgressHero';
 import { LessonCard } from './components/dashboard/LessonCard';
 import { CourseRoadmap } from './components/dashboard/CourseRoadmap';
+import { CurriculumSidebar } from './components/layout/CurriculumSidebar';
 import { soundEffects } from './utils/soundEffects';
 
 const loadLessonView = () => import('./components/lesson/LessonView');
@@ -28,6 +29,34 @@ function PageLoadingFallback() {
       <div className="mt-3 h-4 w-3/5 rounded-lg bg-slate-100" />
     </div>
   );
+}
+
+function CurriculumBootstrap() {
+  const [isReady, setIsReady] = useState(() => allUnits.length > 0);
+
+  useEffect(() => {
+    let isActive = true;
+
+    void loadCurriculum().then(() => {
+      if (isActive) setIsReady(true);
+    });
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-slate-50 px-4 py-16">
+        <div className="mx-auto max-w-xl">
+          <PageLoadingFallback />
+        </div>
+      </div>
+    );
+  }
+
+  return <AppContent />;
 }
 
 type AppTab = 'curriculum' | 'cheatsheet' | 'mistakes';
@@ -87,6 +116,7 @@ function scrollToTop(): void {
 
 function AppContent() {
   const [navigation, setNavigation] = useState<AppNavigationState>(readNavigationState);
+  const [dashboardViewMode, setDashboardViewMode] = useState<'grid' | 'roadmap'>('grid');
   const { isLessonCompleted } = useProgress();
   const { currentTab, selectedUnitId, activeLessonId, isExamModalOpen } = navigation;
 
@@ -150,6 +180,18 @@ function AppContent() {
     navigate({ ...navigation, isExamModalOpen: true });
   };
 
+  const handleSelectUnit = (unitId: number) => {
+    soundEffects.playClick();
+    navigate({
+      ...navigation,
+      currentTab: 'curriculum',
+      selectedUnitId: unitId,
+      activeLessonId: null,
+      isExamModalOpen: false,
+    });
+    scrollToTop();
+  };
+
   const handleSelectTab = (tab: AppTab | 'exam') => {
     soundEffects.playClick();
     if (tab === 'exam') {
@@ -186,12 +228,13 @@ function AppContent() {
       />
 
       {/* Main Content Area */}
-      <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main id="main-content" tabIndex={-1} className="flex-1 w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 py-6 sm:py-8">
         
         {/* Active Lesson Screen */}
         {activeLesson ? (
           <Suspense fallback={<PageLoadingFallback />}>
             <LessonView
+              key={activeLesson.id}
               lesson={activeLesson}
               onBackToDashboard={handleBackToDashboard}
               onSelectLesson={handleSelectLesson}
@@ -199,79 +242,92 @@ function AppContent() {
           </Suspense>
         ) : (
           <>
-            {/* Dashboard / Curriculum Tab */}
+            {/* Dashboard / Curriculum Tab with 2-Column Sidebar Layout */}
             {currentTab === 'curriculum' && (
-              <div className="space-y-10">
-                
-                {/* Unit Switcher Pills */}
-                <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-                  {allUnits.map((u) => {
-                    const isSelected = u.id === selectedUnitId;
-                    return (
-                      <button
-                        key={u.id}
-                        onClick={() => {
-                          soundEffects.playClick();
-                          navigate({
-                            currentTab: 'curriculum',
-                            selectedUnitId: u.id,
-                            activeLessonId: null,
-                            isExamModalOpen: false,
-                          });
-                        }}
-                        className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold shrink-0 transition-colors cursor-pointer ${
-                          isSelected
-                            ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25 ring-2 ring-indigo-300'
-                            : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:text-slate-900'
-                        }`}
-                      >
-                        Unit {u.id}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Hero Unit Progress for Current Unit */}
-                <UnitProgressHero
-                  unit={currentUnit}
-                  onContinueLearning={handleContinueLearning}
+              <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-8">
+                {/* Left Column: Fixed/Sticky 9-Unit Curriculum Sidebar */}
+                <CurriculumSidebar
+                  selectedUnitId={selectedUnitId}
+                  onSelectUnit={handleSelectUnit}
+                  onSelectLesson={handleSelectLesson}
                   onOpenExam={handleOpenExam}
                 />
 
-                {/* Selected Unit Lessons Grid */}
-                <div className="space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
-                    <div>
-                      <h2 className="text-xl sm:text-2xl font-black text-slate-900 m-0 text-left">
-                        {currentUnit.title}
-                      </h2>
-                      <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
-                        {currentUnit.description}
-                      </p>
+                {/* Right Column: Focused Unit Dashboard */}
+                <div className="flex-1 w-full min-w-0 space-y-6">
+                  {/* View Mode Toggle Header */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs">
+                    <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+                        <button
+                          onClick={() => setDashboardViewMode('grid')}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                            dashboardViewMode === 'grid'
+                              ? 'bg-white text-indigo-700 shadow-2xs'
+                              : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          Unit {selectedUnitId} View
+                        </button>
+                        <button
+                          onClick={() => setDashboardViewMode('roadmap')}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                            dashboardViewMode === 'roadmap'
+                              ? 'bg-white text-indigo-700 shadow-2xs'
+                              : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          Full 108 Roadmap
+                        </button>
                     </div>
 
-                    <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full self-start sm:self-auto shrink-0">
-                      {currentUnit.lessons.length} Interactive Lessons
-                    </span>
+                    <div className="text-xs font-medium text-slate-500">
+                      {dashboardViewMode === 'grid' ? `Showing ${currentUnit.lessons.length} lessons in Unit ${selectedUnitId}` : 'Showing all 108 lessons across 9 units'}
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {currentUnit.lessons.map((lesson) => (
-                      <LessonCard
-                        key={lesson.id}
-                        lesson={lesson}
-                        onSelect={handleSelectLesson}
+                  {dashboardViewMode === 'grid' ? (
+                    <>
+                      {/* Hero Unit Progress for Current Unit */}
+                      <UnitProgressHero
+                        unit={currentUnit}
+                        onContinueLearning={handleContinueLearning}
+                        onOpenExam={handleOpenExam}
                       />
-                    ))}
-                  </div>
-                </div>
 
-                {/* Full 9-Unit Roadmap & Syllabus */}
-                <div className="pt-6 border-t border-slate-200">
-                  <CourseRoadmap 
-                    onSelectLesson={handleSelectLesson} 
-                    currentUnitId={selectedUnitId}
-                  />
+                      {/* Selected Unit Lessons Grid */}
+                      <div className="space-y-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+                          <div>
+                            <h2 className="text-xl sm:text-2xl font-black text-slate-900 m-0 text-left">
+                              {currentUnit.title}
+                            </h2>
+                            <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
+                              {currentUnit.subtitle}
+                            </p>
+                          </div>
+
+                          <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full self-start sm:self-auto shrink-0">
+                            {currentUnit.lessons.length} Interactive Lessons
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+                          {currentUnit.lessons.map((lesson) => (
+                            <LessonCard
+                              key={lesson.id}
+                              lesson={lesson}
+                              onSelect={handleSelectLesson}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <CourseRoadmap
+                      onSelectLesson={handleSelectLesson}
+                      currentUnitId={selectedUnitId}
+                    />
+                  )}
                 </div>
               </div>
             )}
@@ -313,7 +369,7 @@ function AppContent() {
 export default function App() {
   return (
     <ProgressProvider>
-      <AppContent />
+      <CurriculumBootstrap />
     </ProgressProvider>
   );
 }

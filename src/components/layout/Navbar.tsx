@@ -9,7 +9,6 @@ import {
   AlertCircle, 
   RotateCcw, 
   Award, 
-  GraduationCap,
   Menu,
   X
 } from 'lucide-react';
@@ -61,31 +60,32 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, selectedUnitId, onSel
   return (
     <>
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-[1720px] mx-auto px-3 sm:px-6 lg:px-8 2xl:px-12">
           <div className="flex items-center justify-between h-16">
             
             {/* Brand / Logo */}
             <button
               type="button"
-              className="flex items-center gap-3 cursor-pointer select-none text-left"
+              className="flex min-w-0 items-center gap-2 sm:gap-3 cursor-pointer select-none text-left"
               onClick={() => onSelectTab('curriculum')}
               aria-label="Go to curriculum home"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 via-amber-500 to-amber-600 flex items-center justify-center text-white shadow-md shadow-amber-500/20">
-                <GraduationCap className="w-6 h-6" />
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-xl tracking-tight text-slate-900">
-                    ¡Claro!
-                  </span>
-                  <span className="text-xs font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">
-                    Spanish Grammar
-                  </span>
-                </div>
-                <p className="text-[11px] font-medium text-slate-500 hidden sm:block">
-                  Unit {selectedUnitId} Selected • English-to-Spanish
-                </p>
+              <img
+                src="/claro-logo.png"
+                alt=""
+                width="40"
+                height="40"
+                className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 object-contain"
+                aria-hidden="true"
+                draggable="false"
+              />
+              <div className="min-w-0">
+                <span className="block font-extrabold text-xl leading-none tracking-tight text-slate-900">
+                  ¡Claro!
+                </span>
+                <span className="mt-1 block w-fit rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold leading-none text-amber-800">
+                  Spanish Grammar
+                </span>
               </div>
             </button>
 
@@ -125,11 +125,11 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, selectedUnitId, onSel
             </nav>
 
             {/* Right Side Stats & Actions */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
               
               {/* Streak Counter */}
               <div 
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-orange-50 text-orange-700 border border-orange-200/60 text-xs font-bold"
+                className="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl bg-orange-50 text-orange-700 border border-orange-200/60 text-xs font-bold"
                 title={`${progress.streakDays} Day Streak!`}
               >
                 <Flame className="w-4 h-4 text-orange-500 fill-orange-500 animate-bounce duration-1000" />
@@ -138,7 +138,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, selectedUnitId, onSel
 
               {/* XP Counter */}
               <div 
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200/60 text-xs font-bold"
+                className="hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200/60 text-xs font-bold"
                 title={`${progress.xp} Total Experience Points`}
               >
                 <Zap className="w-4 h-4 text-indigo-500 fill-indigo-500" />
@@ -148,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, selectedUnitId, onSel
               {/* Sound Effects Toggle */}
               <button
                 onClick={toggleSound}
-                className={`p-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
+                className={`hidden md:inline-flex p-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
                   progress.settings.soundEffects 
                     ? 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200' 
                     : 'bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100'
@@ -167,7 +167,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, selectedUnitId, onSel
               {/* Reset Progress Action */}
               <button
                 onClick={() => setShowResetConfirm(true)}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                className="hidden md:inline-flex p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
                 title="Reset Course Progress"
                 aria-label="Reset progress"
               >
@@ -191,6 +191,22 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, selectedUnitId, onSel
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
           <div id="mobile-navigation" className="md:hidden border-t border-slate-200 bg-white px-4 pt-2 pb-4 space-y-1">
+            <div className="mb-2 flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 text-xs font-bold text-slate-600">
+              <span className="flex items-center gap-1.5">
+                <Zap className="w-4 h-4 text-indigo-500 fill-indigo-500" aria-hidden="true" />
+                {progress.xp} XP
+              </span>
+              <button
+                type="button"
+                onClick={toggleSound}
+                className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-slate-600 hover:bg-white hover:text-slate-900"
+                aria-label="Toggle sound effects"
+                aria-pressed={progress.settings.soundEffects}
+              >
+                {progress.settings.soundEffects ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                <span>{progress.settings.soundEffects ? 'Sound On' : 'Sound Off'}</span>
+              </button>
+            </div>
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -226,6 +242,17 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, selectedUnitId, onSel
             >
               <Award className="w-4 h-4 text-emerald-600" />
               <span>Unit {selectedUnitId} Checkpoint</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setShowResetConfirm(true);
+              }}
+              className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-700"
+            >
+              <RotateCcw className="w-4 h-4" aria-hidden="true" />
+              <span>Reset Course Progress</span>
             </button>
           </div>
         )}

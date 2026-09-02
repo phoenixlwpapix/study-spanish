@@ -4,7 +4,7 @@ import { Sparkles, GraduationCap } from 'lucide-react';
 export const Footer: React.FC = () => {
   return (
     <footer className="border-t border-slate-200 bg-white py-8 mt-auto text-center text-slate-500 text-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <div className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 space-y-4">
         <div className="flex flex-wrap items-center justify-center gap-6 text-sm font-medium text-slate-600">
           <span className="flex items-center gap-1.5">
             <GraduationCap className="w-4 h-4 text-amber-500" />
@@ -12,7 +12,7 @@ export const Footer: React.FC = () => {
           </span>
           <span className="flex items-center gap-1.5">
             <Sparkles className="w-4 h-4 text-indigo-500" />
-            78 interactive lessons • Units 6–9 currently condensed
+            108 interactive lessons across all 9 progressive units
           </span>
         </div>
         <p className="text-slate-400">

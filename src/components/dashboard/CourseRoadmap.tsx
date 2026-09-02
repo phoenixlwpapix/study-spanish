@@ -34,7 +34,7 @@ export const CourseRoadmap: React.FC<CourseRoadmapProps> = ({ onSelectLesson, cu
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6 w-full max-w-6xl 2xl:max-w-7xl mx-auto">
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -46,7 +46,7 @@ export const CourseRoadmap: React.FC<CourseRoadmapProps> = ({ onSelectLesson, cu
               9-Unit Spanish Grammar Roadmap
             </h2>
             <p className="text-sm text-slate-600 font-medium mt-1">
-              Units 1–5 closely follow the StudySpanish topic sequence; Units 6–9 are condensed selections. Click a unit to explore its lessons.
+              Complete 108-lesson curriculum across all 9 progressive units based on StudySpanish Grammar. Click a unit to explore its lessons.
             </p>
           </div>
 
@@ -105,11 +105,6 @@ export const CourseRoadmap: React.FC<CourseRoadmapProps> = ({ onSelectLesson, cu
                       <span className="px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[11px] font-extrabold uppercase tracking-wider">
                         {unit.lessons.length} Lessons
                       </span>
-                      {unit.id >= 6 && (
-                        <span className="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[11px] font-extrabold uppercase tracking-wider">
-                          Condensed
-                        </span>
-                      )}
                       {completedCount > 0 && (
                         <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold">
                           {completedCount}/{unit.lessons.length} Completed

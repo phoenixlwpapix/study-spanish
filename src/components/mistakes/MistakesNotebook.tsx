@@ -123,7 +123,7 @@ export const MistakesNotebook: React.FC<MistakesNotebookProps> = ({ onGoToLesson
   ];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="w-full max-w-6xl 2xl:max-w-7xl mx-auto space-y-6">
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
