@@ -9,6 +9,19 @@ const DAY_IN_MS = 24 * 60 * 60 * 1000;
 const REQUIRED_CORRECT_REVIEWS = 3;
 const REVIEW_INTERVALS_MS = [DAY_IN_MS, 3 * DAY_IN_MS] as const;
 
+function computeUpdatedStreak(currentStreak: number, lastActiveDate: string | null, today: string): number {
+  if (!lastActiveDate) {
+    return 1;
+  }
+  if (lastActiveDate === today) {
+    return Math.max(1, currentStreak);
+  }
+  const lastTime = new Date(lastActiveDate).getTime();
+  const currentTime = new Date(today).getTime();
+  const diffDays = Math.round((currentTime - lastTime) / (1000 * 60 * 60 * 24));
+  return diffDays === 1 ? currentStreak + 1 : 1;
+}
+
 export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [progress, setProgress] = useState<UserProgressState>(() => loadProgress());
 
@@ -18,9 +31,19 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     soundEffects.setMuted(!progress.settings.soundEffects);
   }, [progress]);
 
+  const completedLessonIdSet = React.useMemo(
+    () => new Set(progress.completedLessonIds),
+    [progress.completedLessonIds],
+  );
+
+  const bookmarkedVocabIdSet = React.useMemo(
+    () => new Set(progress.bookmarkedVocabIds),
+    [progress.bookmarkedVocabIds],
+  );
+
   const isLessonCompleted = useCallback((lessonId: string) => {
-    return progress.completedLessonIds.includes(lessonId);
-  }, [progress.completedLessonIds]);
+    return completedLessonIdSet.has(lessonId);
+  }, [completedLessonIdSet]);
 
   const getLessonScore = useCallback((lessonId: string) => {
     const record = progress.lessonScores[lessonId];
@@ -35,14 +58,9 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const earnedXp = Math.max(20, Math.round((percentage / 100) * 80) + 20);
 
     setProgress(prev => {
-      const alreadyCompleted = prev.completedLessonIds.includes(lessonId);
+      const alreadyCompleted = completedLessonIdSet.has(lessonId);
       const newCompleted = alreadyCompleted ? prev.completedLessonIds : [...prev.completedLessonIds, lessonId];
-      
-      // Calculate streak
-      let streak = prev.streakDays;
-      if (prev.lastActiveDate !== today) {
-        streak += 1;
-      }
+      const streak = computeUpdatedStreak(prev.streakDays, prev.lastActiveDate, today);
 
       return {
         ...prev,
@@ -66,7 +84,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       triggerConfetti();
       soundEffects.playVictory();
     }
-  }, []);
+  }, [completedLessonIdSet]);
 
   const recordMistake = useCallback((mistake: Omit<MistakeItem, 'id' | 'timestamp' | 'reviewedCount' | 'consecutiveCorrect' | 'reviewStatus' | 'nextReviewAt' | 'lastReviewedAt'>) => {
     setProgress(prev => {
@@ -170,6 +188,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const safeScore = Math.min(validMax, Math.max(0, rawScore));
     const percentage = Math.min(100, Math.max(0, Math.round((safeScore / validMax) * 100)));
     const earnedXp = passed ? 150 : 50;
+    const today = new Date().toISOString().split('T')[0];
 
     setProgress(prev => ({
       ...prev,
@@ -183,7 +202,9 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           timestamp: Date.now()
         }
       },
-      xp: prev.xp + earnedXp
+      xp: prev.xp + earnedXp,
+      streakDays: computeUpdatedStreak(prev.streakDays, prev.lastActiveDate, today),
+      lastActiveDate: today,
     }));
 
     if (passed) {
@@ -194,7 +215,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const toggleVocabBookmark = useCallback((vocabId: string) => {
     setProgress(prev => {
-      const exists = prev.bookmarkedVocabIds.includes(vocabId);
+      const exists = bookmarkedVocabIdSet.has(vocabId);
       return {
         ...prev,
         bookmarkedVocabIds: exists
@@ -203,11 +224,11 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       };
     });
     soundEffects.playClick();
-  }, []);
+  }, [bookmarkedVocabIdSet]);
 
   const isVocabBookmarked = useCallback((vocabId: string) => {
-    return progress.bookmarkedVocabIds.includes(vocabId);
-  }, [progress.bookmarkedVocabIds]);
+    return bookmarkedVocabIdSet.has(vocabId);
+  }, [bookmarkedVocabIdSet]);
 
   const updateSettings = useCallback((newSettings: Partial<UserProgressState['settings']>) => {
     setProgress(prev => ({

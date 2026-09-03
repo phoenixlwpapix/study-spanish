@@ -44,11 +44,17 @@ export const CurriculumSidebar: React.FC<CurriculumSidebarProps> = ({
     }
   };
 
-  const totalCurriculumLessons = allUnits.reduce((total, unit) => total + unit.lessons.length, 0);
-  const totalCompletedOverall = allUnits.reduce((acc, u) => {
-    return acc + u.lessons.filter(l => isLessonCompleted(l.id)).length;
-  }, 0);
-  const overallPercentage = Math.round((totalCompletedOverall / totalCurriculumLessons) * 100);
+  const totalCurriculumLessons = React.useMemo(
+    () => allUnits.reduce((total, unit) => total + unit.lessons.length, 0),
+    [],
+  );
+  const totalCompletedOverall = React.useMemo(
+    () => allUnits.reduce((acc, u) => acc + u.lessons.filter(l => isLessonCompleted(l.id)).length, 0),
+    [isLessonCompleted],
+  );
+  const overallPercentage = totalCurriculumLessons > 0
+    ? Math.round((totalCompletedOverall / totalCurriculumLessons) * 100)
+    : 0;
 
   return (
     <aside className="w-full lg:w-80 xl:w-96 2xl:w-[400px] shrink-0 lg:sticky lg:top-20 space-y-4">

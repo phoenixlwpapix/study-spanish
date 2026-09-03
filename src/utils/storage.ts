@@ -7,7 +7,7 @@ const defaultState: UserProgressState = {
   lessonScores: {},
   unitExamScores: {},
   xp: 0,
-  streakDays: 1,
+  streakDays: 0,
   lastActiveDate: null,
   activeLessonId: null,
   mistakes: [],
@@ -27,9 +27,9 @@ export function loadProgress(): UserProgressState {
     if (!raw) return defaultState;
     const parsed = JSON.parse(raw);
 
-    // Calculate daily streak
+    // Calculate daily streak accurately
     const today = new Date().toISOString().split('T')[0];
-    let streak = parsed.streakDays || 1;
+    let streak = typeof parsed.streakDays === 'number' ? parsed.streakDays : 0;
 
     if (parsed.lastActiveDate) {
       const lastDate = new Date(parsed.lastActiveDate);
@@ -37,13 +37,12 @@ export function loadProgress(): UserProgressState {
       const diffTime = currentDate.getTime() - lastDate.getTime();
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-      if (diffDays === 1) {
-        // Consecutive day
-        // Keep streak or increment on first action
-      } else if (diffDays > 1) {
-        // Streak broken
-        streak = 1;
+      if (diffDays > 1) {
+        // Streak broken after missing one or more days
+        streak = 0;
       }
+    } else {
+      streak = 0;
     }
 
     // Sanitize and clamp existing lessonScores
@@ -112,5 +111,5 @@ export function resetAllProgress(): UserProgressState {
   if (typeof window !== 'undefined') {
     localStorage.removeItem(STORAGE_KEY);
   }
-  return { ...defaultState, lastActiveDate: new Date().toISOString().split('T')[0] };
+  return { ...defaultState };
 }

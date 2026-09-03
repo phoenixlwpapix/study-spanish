@@ -3,9 +3,29 @@ import type { Unit, Lesson } from './types';
 export const allUnits: Unit[] = [];
 
 let curriculumPromise: Promise<Unit[]> | null = null;
+let unitsMap: Map<number, Unit> | null = null;
+let lessonsMap: Map<string, Lesson> | null = null;
+
+function rebuildCurriculumIndexes(units: Unit[]): void {
+  const nextUnitsMap = new Map<number, Unit>();
+  const nextLessonsMap = new Map<string, Lesson>();
+
+  for (const unit of units) {
+    nextUnitsMap.set(unit.id, unit);
+    for (const lesson of unit.lessons) {
+      nextLessonsMap.set(lesson.id, lesson);
+    }
+  }
+
+  unitsMap = nextUnitsMap;
+  lessonsMap = nextLessonsMap;
+}
 
 export function loadCurriculum(): Promise<Unit[]> {
-  if (allUnits.length > 0) return Promise.resolve(allUnits);
+  if (allUnits.length > 0) {
+    if (!unitsMap || !lessonsMap) rebuildCurriculumIndexes(allUnits);
+    return Promise.resolve(allUnits);
+  }
 
   curriculumPromise ??= Promise.all([
     import('./unit1').then(({ unit1 }) => unit1),
@@ -19,6 +39,7 @@ export function loadCurriculum(): Promise<Unit[]> {
     import('./unit9').then(({ unit9 }) => unit9),
   ]).then((units) => {
     allUnits.splice(0, allUnits.length, ...units);
+    rebuildCurriculumIndexes(units);
     return allUnits;
   });
 
@@ -26,10 +47,12 @@ export function loadCurriculum(): Promise<Unit[]> {
 }
 
 export function getUnitById(id: number): Unit | undefined {
+  if (unitsMap) return unitsMap.get(id);
   return allUnits.find(u => u.id === id);
 }
 
 export function getLessonById(lessonId: string): Lesson | undefined {
+  if (lessonsMap) return lessonsMap.get(lessonId);
   for (const unit of allUnits) {
     const found = unit.lessons.find(l => l.id === lessonId);
     if (found) return found;

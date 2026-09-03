@@ -30,11 +30,23 @@ const reviewDateFormatter = new Intl.DateTimeFormat('en', {
   minute: '2-digit',
 });
 
+function normalizeReviewAnswer(text: string): string {
+  return text
+    .trim()
+    .toLocaleLowerCase()
+    .replace(/^[\s¿¡"']+|[\s?.!,;"']+$/g, '')
+    .trim();
+}
+
 function isAnswerCorrect(userAnswer: string, correctAnswer: string): boolean {
-  const normalizedUserAnswer = userAnswer.trim().toLocaleLowerCase();
-  return correctAnswer
-    .split(' / ')
-    .some((answer) => answer.trim().toLocaleLowerCase() === normalizedUserAnswer);
+  const normalizedUser = normalizeReviewAnswer(userAnswer);
+  if (!normalizedUser) return false;
+
+  return correctAnswer.split(' / ').some((answer) => {
+    const rawTarget = answer.trim().toLocaleLowerCase();
+    const normalizedTarget = normalizeReviewAnswer(answer);
+    return rawTarget === userAnswer.trim().toLocaleLowerCase() || normalizedTarget === normalizedUser;
+  });
 }
 
 function getReviewLabel(item: MistakeItem, now: number): string {
